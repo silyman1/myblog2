@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load staticfiles %}
+<meta charset="utf-8">
+<title>测试登录</title>
+<link type='text/css' href='{% static "css/login.css" %}' rel='stylesheet' />
+</head>
+<h2>登录表单</h2>
+
+<button onclick="document.getElementById('login').style.display='block'" style="width:auto;">登录</button>
+
+<div id="login" class="modal">
+  
+  <form class="modal-content animate" action="">
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('login').style.display='none'" class="close" title="Close Modal">&times;</span>
+      <img src="https://static.runoob.com/images/mix/img_avatar.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+      <p><label><b>用户名：</b></label></p>
+      <p>{{loginform.username}}</p>
+
+      <p><label><b>密码：</b></label></p>
+      <p>{{loginform.password}}</p>
+        
+      <button type="submit">登录</button>
+      <input type="checkbox" checked=""> 记住我
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      
+      <span class="psw">忘记 <a href="#">密码?</a></span>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,40 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<!--幻灯片-->
+				<div class ="slide-container">
+					<div class="stopslide" onclick="stopSlides(t)"><a href="javascript:void(0)" id="flag">stop</a></div>
+					<div class="slideshow fade" id ='sf'>
+						<div class="number-show">1/4</div>
+						<img src="{% static 'images\1.jpg' %}" width="100%" height="170">
+						<div class="article-detail">lallallal</div>
+					</div>
+					<div class="slideshow fade" id ='sf'>
+						<div class="number-show">2/4</div>
+						<img src="{% static 'images\2.jpg' %}" width="100%" height="170">
+						<div class="article-detail">eeeeee</div>
+					</div>
+					<div class="slideshow fade" id ='sf'>
+						<div class="number-show">3/4</div>
+						<img src="{% static 'images\3.jpg' %}" width="100%" height="170">
+						<div class="article-detail">dddddd</div>
+					</div>
+					<div class="slideshow fade" id ='sf'>
+						<div class="number-show">4/4</div>
+						<img src="{% static 'images\4.jpg' %}" width="100%" height="170">
+						<div class="article-detail">gggggg</div>
+					</div>
+				</div>
+				<br>
+
+				<div style="text-align:center">
+				  <span class="dot" onclick="jumpTo(1)"></span> 
+				  <span class="dot" onclick="jumpTo(2)"></span> 
+				  <span class="dot" onclick="jumpTo(3)"></span>
+				  <span class="dot" onclick="jumpTo(4)"></span> 
+				</div>
+				<script src="{% static 'js\slide_test.js' %}"></script>
+{%endblock%}
+	</body>
+</html>
