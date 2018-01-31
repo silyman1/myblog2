@@ -1,4 +1,4 @@
-body {  
+/*body {  
 background:#3d71b8 url(E:\\gitprojects\\html-css-js\\001幻灯片\\4.jpg);  
 background-size: cover;
 background-attachment: fixed; 
@@ -6,8 +6,9 @@ background-position:center;
 background-repeat:no-repeat;
 -webkit-background-size: cover;
 -o-background-size: cover;
-}
+}*/
 /* Full-width input fields */
+
 input[type=text], input[type=password] {
     width: 65%;
     padding: 12px 20px;
@@ -43,7 +44,7 @@ button {
 }
 
 /* The Modal (background) */
-.modal {
+.regmodal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -58,7 +59,7 @@ button {
 }
 
 /* Modal Content/Box */
-.modal-content {
+.regmodal-content {
     background-color: #fefefe;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
     border: 1px solid #888;

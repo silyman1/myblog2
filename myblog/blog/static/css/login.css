@@ -1,4 +1,4 @@
-body {  
+/*body {  
 background:#3d71b8 url(E:\\gitprojects\\html-css-js\\001幻灯片\\4.jpg);  
 background-size: cover;
 background-attachment: fixed; 
@@ -6,10 +6,11 @@ background-position:center;
 background-repeat:no-repeat;
 -webkit-background-size: cover;
 -o-background-size: cover;
-}
+}*/
+
 /* Full-width input fields */
 input[type=text], input[type=password] {
-    width: 100%;
+    width: 65%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -17,18 +18,17 @@ input[type=text], input[type=password] {
     box-sizing: border-box;
 }
 
-/* Set a style for all buttons */
-button {
+.button {
     background-color: #4CAF50;
     color: white;
     padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
+   /* margin: 8px 0;*/
+ /* border: none;
+    cursor: pointer;*/
+    width: auto;
 }
 
-button:hover {
+.button:hover {
     opacity: 0.8;
 }
 
@@ -45,7 +45,7 @@ button:hover {
     margin: 24px 0 12px 0;
     position: relative;
 }
-form{
+/*form{
 background:#3d71b8 url(E:\\gitprojects\\html-css-js\\001幻灯片\\5.png);  
 background-size: cover;
 background-attachment: fixed; 
@@ -53,7 +53,7 @@ background-position:center;
 background-repeat:no-repeat;
 -webkit-background-size: cover;
 -o-background-size: cover;
-}
+}*/
 img.avatar {
     width: 40%;
     border-radius: 50%;

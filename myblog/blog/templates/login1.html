@@ -1,0 +1,26 @@
+		<div id="login" class="modal">
+		  <form class="modal-content animate" method ="post" action="/accounts/login/">
+		  {% csrf_token %}
+			<div class="imgcontainer">
+			  <span onclick="document.getElementById('login').style.display='none'" class="close" title="Close Modal">&times;</span>
+			  <img src="https://static.runoob.com/images/mix/img_avatar.png" alt="Avatar" class="avatar">
+			</div>
+
+			<div class="container">
+			  <p><label><b>用户名：</b></label></p>
+
+			  <input type="text" placeholder="Enter Username" name="uname" required>
+
+			  <p><label><b>密码：</b></label></p>
+			  <input type="password" placeholder="Enter Password" name="psw" required>
+				
+			  <p><button type="submit" class="button big fit">登录</p></button></p>
+			  <p><input type="checkbox" checked=""> 记住我</p>
+			</div>
+
+			<div class="container" style="background-color:#f1f1f1">
+			  
+			  <span class="psw">忘记 <a href="#">密码?</a></span>
+			</div>
+		  </form>
+		</div>

@@ -1,0 +1,35 @@
+
+<div id ="register" class="regmodal">
+	<span onclick="document.getElementById('register').style.display='none'" class ="close" title="Close Modal">×</span>
+		<form class="regmodal-content" method ="post" action="{%url 'blog:register' %}">
+		  <div class="container">
+			<p><label><b>用户名：</b></label></p>
+			<input type="text" placeholder="Your Name:" name="username" required>
+			<p><label><b>密码：</b></label></p>
+			<input type="text" placeholder="Password:" name="password" required>
+			<p><label><b>确认密码：</b></label></p>
+			<input type="text" placeholder="Password:" name="password-repeat" required>
+			<p><label><b>邮箱：</b></label></p>
+			<input type="text" placeholder="Your Email:" name="email" required>
+			<p><input type="checkbox" checked="">记住密码？</p>
+			<p><span><input type="checkbox" checked="">我接受xxx用户协议<a href="#">LLLLL</a>。</span></p>
+			
+			<div class ="clearfix">
+				<button type="submit" class='signupbtn' style="margin-right:10px;" >注册</button>&nbsp;&nbsp;
+				<button type="button" onclick="document.getElementById('register').style.display='none'" class='cancelbtn'>取消</button>
+			</div>
+		  </div>
+		 </form>
+</div>
+<script>
+// 获取模型
+var modal = document.getElementById('register');
+
+// 鼠标点击模型外区域关闭登录框
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+</html>
