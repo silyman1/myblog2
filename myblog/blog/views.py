@@ -24,11 +24,7 @@ def register(request):
 		else:
 			return HttpResponse("注册失败")
 
-		#profile=UserProfile(user_id=user.id,Tel =Tel,is_buyer=is_buyer,user_register_time=user_register_time)
-		#profile.save()
-
 	else:
-		registerform =RegisterForm()
 	return render_to_response('regist.html',{'registerform':registerform,'title':'注册啦啦啦'})
 @csrf_exempt
 def login_view(request):
@@ -63,3 +59,5 @@ def index(request):
 	return render(request,'index.html')
 def home(request):
 	return HttpResponse("hello")
+def submit_post(request):
+	pass

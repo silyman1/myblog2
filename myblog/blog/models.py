@@ -9,3 +9,8 @@ class User(AbstractUser,models.Model):
 	last_seen = models.DateTimeField(auto_now=False, auto_now_add=True)
 	def __unicode__(self):
 		return self.username#返回unicode
+class Post(models.Model):
+	body = models.TextField(null=True)
+	type = models.CharField(max_length=100)
+	post_image = models.CharField(max_length=200,null=True)
+	post_time = models.DateTimeField(auto_now=False, auto_now_add=True)
