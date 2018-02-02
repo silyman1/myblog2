@@ -5,8 +5,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
-from .forms import LoginForm
-from .models import User
+from .forms import LoginForm,PostForm
+from .models import User,Post
 # Create your views here.
 @csrf_exempt
 def register(request):
@@ -25,7 +25,7 @@ def register(request):
 			return HttpResponse("注册失败")
 
 	else:
-	return render_to_response('regist.html',{'registerform':registerform,'title':'注册啦啦啦'})
+		return render_to_response('regist.html')
 @csrf_exempt
 def login_view(request):
 	if request.method == 'POST':
@@ -59,5 +59,25 @@ def index(request):
 	return render(request,'index.html')
 def home(request):
 	return HttpResponse("hello")
+@csrf_exempt
+def blog_post(request,user_id):
+	if request.method == 'POST':
+		print '*****************'
+		for key in request.POST:
+			print key
+		postform =PostForm(request.POST)
+		if loginform.is_valid():
+			post = Post()
+			if request.FILES['picfile']:
+				pass
+			post.body =loginform.cleaned_data['body']
+			post.type =loginform.cleaned_data['type']
+			post.save()
+			print u'发表成功'
+		redirect(reverse('blog:index'))
+	else:
+		print '*****************'
+		postform =PostForm()
+		return render(request,'write_post.html',{"postform":postform})
 def submit_post(request):
 	pass

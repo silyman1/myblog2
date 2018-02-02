@@ -24,3 +24,39 @@
 			</div>
 		  </form>
 		</div>
+<div id ="register" class="modal">
+		<form class="modal-content animate" method ="post" action="{%url 'blog:register' %}">
+		{% csrf_token %}
+		<div class="imgcontainer">
+		<span onclick="document.getElementById('register').style.display='none'" class ="close" title="Close Modal">&times;</span>
+		</div>
+		<div class="container">
+			<p><label><b>用户名：</b></label></p>
+			<input type="text" placeholder="Your Name:" name="username" required>
+			<p><label><b>密码：</b></label></p>
+			<input type="text" placeholder="Password:" name="password" required>
+			<p><label><b>确认密码：</b></label></p>
+			<input type="text" placeholder="Password:" name="password-repeat" required>
+			<p><label><b>邮箱：</b></label></p>
+			<input type="text" placeholder="Your Email:" name="email" required>
+			<div class="container" style="background-color:#f1f1f1">
+			<p><span><input type="checkbox" checked="">我接受xxx用户协议<a href="#">LLLLL</a>。</span></p>
+			</div>
+				<p><button type="submit" class="button big fit" >注册</button></p>
+		  </div>
+		 </form>
+</div>
+<script>
+// 获取模型
+var modal = document.getElementById('register');
+var modal2 = document.getElementById('login');
+// 鼠标点击模型外区域关闭登录框
+window.onclick = function(event) {
+    if (event.target == modal ) {
+        modal.style.display = "none";
+    }
+	else if(event.target == modal2){
+		modal2.style.display = "none";
+	}
+}
+</script>

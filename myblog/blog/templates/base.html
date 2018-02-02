@@ -6,9 +6,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="{% static 'css/main.css' %}" />
-		<link type='text/css' href="{% static 'css\slide_test.css' %}" rel='stylesheet' />
+		<link type='text/css' href="{% static 'css/slide_test.css' %}" rel='stylesheet' />
 		<link type='text/css' href='{% static "css/login.css" %}' rel='stylesheet' />
-		<link type='text/css' href='{% static "css/register.css" %}' rel='stylesheet' />
 		<script src="{% static 'js\jquery.min.js' %}"></script>
 		<script src="{% static 'js\skel.min.js' %}"></script>
 		<script src="{% static 'js\util.js' %}"></script>
@@ -20,7 +19,7 @@
 
 			<!-- Header -->
 				<header id="header">
-					<h1><a href="#menu2">silyman的博客</a></h1>
+					<h1><a href="#">silyman的博客</a></h1>
 					<nav class="links">
 						<ul>
 							<li><a href="#">首页</a></li>
@@ -34,9 +33,8 @@
 							<li><a href="#">我的联系方式</a></li>
 							{%else%}
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<li><a href="javascript:void(0)" onclick="document.getElementById('login').style.display='block'" style="width:auto;">登录</a></li>
-							<li><a href="#"  onclick="document.getElementById('register').style.display='block'"
-style ="width:auto;">注册</a></li>
+							<li><a href="javascript:void(0)" onclick="login_Or_reg('login')" style="width:auto;">登录</a></li>
+							<li><a href="#"  onclick="login_Or_reg('register')" style ="width:auto;">注册</a></li>
 							{%endif%}
 						</ul>
 					</nav>
@@ -71,7 +69,7 @@ style ="width:auto;">注册</a></li>
 						<section>
 							<ul class="links">
 								<li>
-									<a href="#">
+									<a href={%url 'blog:blog_post' request.user.id %} style="font-size:30px;cursor:pointer" >
 										<h3>写博客</h3>
 									</a>
 								</li>
@@ -117,8 +115,23 @@ style ="width:auto;">注册</a></li>
 		</div>
 		{%if not request.user.is_authenticated%}
 		{%include 'login1.html'%}
-		{%include 'register.html'%}
 		{%endif%}
 {%block content%}{%endblock%}
+<script>
+function login_Or_reg(t){
+	if (t == 'login'){
+		document.getElementById('register').style.display='none';
+		document.getElementById('login').style.display='block';
+	}
+	else {
+		document.getElementById('login').style.display='none';
+		document.getElementById('register').style.display='block';
+	}
+}
+function openNav() {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("write").style.height = "100%";
+}
+</script>
 	</body>
 </html>

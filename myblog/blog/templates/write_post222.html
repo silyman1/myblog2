@@ -1,0 +1,55 @@
+<div id="write" class="postmodal">
+ <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <form class="postmodal-content animate" method ="post" action="#">
+	<button type="submit" class='signupbtn' style="margin-left:10px;" >发表</button>
+	{% csrf_token %}
+	<div class="container">
+	  <p>{{postform.type}}</p>
+	  <p>{{postform.body}}</p>
+	<input type="file" onchange='PreviewImage(this)' />  
+	  <div class="img-cont">
+      </div>   
+  </form>
+</div>
+<script>
+var id =1
+function PreviewImage(imgfile){
+	var pattern =/(\.*.jpg$)|(\.*.png$)|(\.*.jpeg$)|(\.*.gif$)|(\.*.bmp$)/;
+	if(!pattern.test(imgfile.value)){
+		alert("不支持此格式的文件！");
+		imgfile.focus();
+	}
+	else{
+	var path;
+	id +=1;
+	$(".img-cont").append("<div><div id ='"+id+"'><img src='' /></div><a class='hide delete-btn'>删除</a></div>");
+	
+	path =URL.createObjectURL(imgfile.files[0]);
+	document.getElementById(id).innerHTML="<img src'"+path+"' width='200' height='150'/>";
+	}
+	resetForm(imgfile); 
+}
+
+//重置表单,允许用户连续添加相同的图片
+function resetForm(imgFile){
+  $(imgFile).parent()[0].reset();
+}
+
+$(".img-cont").off("mouseenter","div").on("mouseenter","div",function(){
+    var that=this;
+    var dom=$(that).children("a");
+    dom.removeClass("hide");
+    //为点击事件解绑，防止重复执行
+    dom.off("click");
+    dom.on("click",function(){
+    	//删除当前图片
+     	dom.parent().remove();
+     });
+}).off("mouseleave","div").on("mouseleave","div",function(){
+    var that=this;
+    $(that).children("a").addClass("hide");
+})
+function closeNav() {
+    document.getElementById("write").style.height = "0%";
+}
+</script>

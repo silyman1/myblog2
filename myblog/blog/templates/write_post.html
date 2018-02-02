@@ -1,0 +1,16 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+{%block content%}
+	<div id="post" class="postmodal">
+		  <form  method ="post" action="{%url 'blog:blog_post' request.user.id%}">
+		  {% csrf_token %}
+		  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" class="button big" value="发表"></p>
+			<div class="container">
+			  <p><label><b>选择博文的类型：</b></label>
+			  {{postform.type}}</p>
+
+			  <p><label><b>在此写入你想的内容：</b></label></p>
+			  <p>{{postform.body}}</p>
+		  </form>
+	</div>
+{%endblock%}
