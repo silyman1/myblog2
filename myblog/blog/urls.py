@@ -5,6 +5,12 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index, name='index'),
+	url(r'^travel/$', views.travel, name='travel'),
+	url(r'^foods/$', views.foods, name='foods'),
+	url(r'^movies/$', views.movies, name='movies'),
+	url(r'^reading/$', views.reading, name='reading'),
+	url(r'^notes/$', views.notes, name='notes'),
+	url(r'^author/(?P<user_id>[0-9]+)/home/$', views.home, name='home'),
 	url(r'^register/$', views.register, name='register'),
 	url(r'^author/(?P<user_id>[0-9]+)/write_blog/$', views.blog_post, name='blog_post'),
     #url(r'^login/$', views.login_view name='login') ,

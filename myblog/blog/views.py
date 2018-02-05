@@ -54,9 +54,22 @@ def logout_view(request):
 def index(request):
 	print request.user.is_authenticated()
 	#article_list = get_object_or_404
-	article_list={}
+	article_list = Post.objects.order_by('-time_to_post')
 	#return render_to_response("index.html",{"article_list":article_list})
-	return render(request,'index.html')
+	return render(request,'index.html',{"article_list":article_list})
+def home(request,user_id):
+	return HttpResponse("hello")
+def travel(request):
+	return HttpResponse("hello")
+
+def foods(request):
+	return HttpResponse("hello")
+def movies(request):
+	return HttpResponse("hello")
+def reading(request):
+	return HttpResponse("hello")
+def notes(request):
+	return HttpResponse("hello")
 def home(request):
 	return HttpResponse("hello")
 @csrf_exempt
@@ -66,15 +79,18 @@ def blog_post(request,user_id):
 		for key in request.POST:
 			print key
 		postform =PostForm(request.POST)
-		if loginform.is_valid():
+		if postform.is_valid():
 			post = Post()
-			if request.FILES['picfile']:
+			try:
+				file = request.FILES['picfile']
 				pass
-			post.body =loginform.cleaned_data['body']
-			post.type =loginform.cleaned_data['type']
+			except:
+				pass
+			post.body =postform.cleaned_data['body']
+			post.type =postform.cleaned_data['type']
 			post.save()
 			print u'发表成功'
-		redirect(reverse('blog:index'))
+		return redirect(reverse('blog:index'))
 	else:
 		print '*****************'
 		postform =PostForm()

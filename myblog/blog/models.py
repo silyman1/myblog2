@@ -11,6 +11,9 @@ class User(AbstractUser,models.Model):
 		return self.username#返回unicode
 class Post(models.Model):
 	body = models.TextField(null=True)
+	title = models.CharField(max_length=100,default="")
+	brief = models.CharField(max_length=100,default="")
 	type = models.CharField(max_length=100)
 	post_image = models.CharField(max_length=200,null=True)
-	post_time = models.DateTimeField(auto_now=False, auto_now_add=True)
+	post_time = models.DateTimeField('time_to_post',auto_now=False, auto_now_add=True)
+	author = models.ForeignKey(User)

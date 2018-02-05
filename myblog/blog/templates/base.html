@@ -22,14 +22,14 @@
 					<h1><a href="#">silyman的博客</a></h1>
 					<nav class="links">
 						<ul>
-							<li><a href="#">首页</a></li>
-							<li><a href="#">旅行</a></li>
-							<li><a href="#">美食</a></li>
-							<li><a href="#">电影</a></li>
-							<li><a href="#">读书</a></li>
-							<li><a href="#">杂记</a></li>
+							<li><a href={%url 'blog:index'%}>首页</a></li>
+							<li><a href={%url 'blog:travel'%}>旅行</a></li>
+							<li><a href={%url 'blog:foods'%}>美食</a></li>
+							<li><a href={%url 'blog:movies'%}>电影</a></li>
+							<li><a href={%url 'blog:reading'%}>读书</a></li>
+							<li><a href={%url 'blog:notes'%}>杂记</a></li>
 							{%if request.user.is_authenticated%}
-							<li><a href="#">我的主页</a></li>
+							<li><a href={%url 'blog:home' request.user.id %}>我的主页</a></li>
 							<li><a href="#">我的联系方式</a></li>
 							{%else%}
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
