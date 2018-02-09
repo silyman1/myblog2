@@ -6,15 +6,21 @@
 				<p>{{article.brief}}</p>
 			</div>
 			<div class="meta">
-				<time class="published" datetime="2015-10-25">{{article.post_time}}</time>
-				<a href="#" class="author"><span class="name">{{article.author.username}}</span><img src="images/avatar.jpg" alt="" /></a>
+				<time class="published" >{{article.post_time}}</time>
+				<a href={%url 'blog:get_information' article.author.id %} class="author"><span class="name">{{article.author.username}}</span><img src="" alt="" /></a>
 			</div>
 		</header>
-		<a href="#" class="image featured"><img src="images/pic02.jpg" alt="" /></a>
+<span>
+		{%for img in img_list%}
+		{%if img.article == article%}
+<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' height="280" width="280" alt="" /></a>
+		{%endif%}
+		{%endfor%}
 		<p>{{article.body}}</p>
+</span>
 		<footer>
 			<ul class="actions">
-				<li><a href="#" class="button big">Continue Reading</a></li>
+				<li><a href="#" class="button big">查看更多</a></li>
 			</ul>
 			<ul class="stats">
 				<li><a href="#">General</a></li>

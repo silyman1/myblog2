@@ -1,0 +1,65 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<div class ="information">
+<table>
+	<tr valign="top">
+	<td><img src="/static/images/{{user.avatar}}"width="178" height="200"></td>
+	<td><input type="submit" value="更换" ></td>
+	</tr>
+    <tr valign="top">
+        <td>
+			<h1>&nbsp;&nbsp;<i>昵称：</i>{{user.username}}</h1>
+			<p>&nbsp;&nbsp;<i>简介：</i>{% if user.mysignature %}{{user.mysignature}}{% endif %}</p>
+			<p>&nbsp;&nbsp;<i>邮箱：</i>{{user.email}}</p>
+			<p>&nbsp;&nbsp;<i>注册时间：</i>{{user.user_register_time}}</p>
+			{% if user.last_seen %}
+			<p>&nbsp;&nbsp;<em>上次登录时间: {{user.last_seen}}</em></p>{% endif %}
+			{%if request.user.id != user.id%}
+			<p>
+			  <span>&nbsp;&nbsp;<i>他的关注：</i>
+				<span id ="followers"><a href ="#">{{followers_length}}</a></span>
+			  </span>
+			  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>他的粉丝：</i>
+				<span id ="followeds"><a href ="#">{{followed_length}}</a></span>
+			  </span>
+			</p>
+			{%else%}
+			<p>
+			  <span>&nbsp;&nbsp;<i>我的关注：</i>
+				<span id ="followers"><a href ="#">{{followers_length}}</a></span>
+			  </span>
+			  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>我的粉丝：</i>
+				<span id ="followeds"><a href ="#">{{followed_length}}</a></span>
+			  </span>
+			</p>
+			{%endif%}
+		</td>
+		<td>
+			{%if request.user.id == user.id%}
+			<h1>
+			<span>&nbsp;&nbsp;<a href={%url 'blog:edit' request.user.id%}><input type="submit" value="编辑" ></a></span>
+			</h1>
+			{%elif request.user not in followed_list%}
+			<h1>
+			<span>&nbsp;&nbsp;<a href={%url 'blog:follow' user.id%}><input type="submit" value="关注" ></a></span>
+			</h1>
+			{%else%}
+			<h1>
+			<span>&nbsp;&nbsp;<a href={%url 'blog:unfollow' user.id%}><input type="submit" value="取消关注" ></a></span>
+			</h1>
+			{%endif%}
+		</td>
+	</tr>
+</table>
+{%if article_list%}
+<h1>&nbsp;&nbsp;<i>最近发表的博客：</i></h1>
+<div class ="post-container">
+	{%for article in article_list%}
+	{%include 'post.html'%}
+	{%endfor%}
+</div>
+{%endif%}
+</div>
+{%endblock%}

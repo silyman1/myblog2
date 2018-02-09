@@ -2,11 +2,28 @@
 from django.db import models
 #扩展django自带user
 from django.contrib.auth.models import AbstractUser
+from django.db.models import Count
 # Create your models here.
+
 class User(AbstractUser,models.Model):
 	user_register_time = models.DateTimeField('date to register',auto_now_add=True)
 	mysignature = models.TextField(null=True)
 	last_seen = models.DateTimeField(auto_now=False, auto_now_add=True)
+	avatar = models.CharField(max_length=200,default='avatar-default.jpg')
+	def get_followers(self):
+	#关注的人
+		user_list=[]
+		for follower_ship in self.followed.all():
+			user_list.append(follower_ship.follower)
+		return user_list
+	def get_followed(self):
+	#关注我的人
+		user_list=[]
+		a = self.follower.all().aggregate(Count("id"))
+		print a.get('id__count'),'testhere222'
+		for followed_ship in self.follower.all():
+			user_list.append(followed_ship.followed)
+		return user_list
 	def __unicode__(self):
 		return self.username#返回unicode
 class Post(models.Model):
@@ -15,5 +32,16 @@ class Post(models.Model):
 	brief = models.CharField(max_length=100,default="")
 	type = models.CharField(max_length=100)
 	post_image = models.CharField(max_length=200,null=True)
-	post_time = models.DateTimeField('time_to_post',auto_now=False, auto_now_add=True)
+	post_time = models.DateTimeField('time_to_post',auto_now=True)
 	author = models.ForeignKey(User)
+	def __unicode__(self):
+		return self.title#返回unicode
+class Picture(models.Model):
+	image_url = models.CharField(max_length=200)
+	article = models.ForeignKey(Post)
+	type = models.CharField(max_length=100,default="1")
+	
+
+class Friendship(models.Model):
+	followed = models.ForeignKey(User,related_name="followed")
+	follower = models.ForeignKey(User,related_name="follower")

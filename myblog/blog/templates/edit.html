@@ -1,0 +1,20 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<form action="{%url 'blog:edit' request.user.id%}" method="post" enctype="multipart/form-data" name ="edit">
+{%csrf_token%}
+<table>
+    <tr valign="top">
+        <td>
+			<h1><i>昵称：</i>{{editform.username}}</h1>
+			<p><i>邮箱：</i>{{editform.email}}</p>
+			<p><i>简介：</i>{{editform.mysignature}}</p>
+			<br />
+			<p><input type="submit" value="修改"></p>
+		</td>
+	</tr>
+</table>
+</form>
+
+{%endblock%}

@@ -14,3 +14,8 @@ class PostForm(forms.Form):
 	]
 	type = forms.IntegerField(widget=forms.Select(choices=TYPE_LIST,attrs={'name':"demo-category","id":"demo-category"}))
 	title = forms.CharField(label='标题',max_length=100)
+	brief = forms.CharField(label='简介',max_length=100)
+class EditForm(forms.Form):
+	username = forms.CharField(label='用户名',max_length=50)
+	email = forms.EmailField(label='邮箱',max_length=50)
+	mysignature = forms.CharField(widget=forms.Textarea(),max_length=100,required=False)

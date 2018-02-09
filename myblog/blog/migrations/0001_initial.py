@@ -45,6 +45,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
+            name='Picture',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('image_url', models.CharField(max_length=200)),
+                ('type', models.CharField(default=b'1', max_length=100)),
+            ],
+        ),
+        migrations.CreateModel(
             name='Post',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -53,8 +61,13 @@ class Migration(migrations.Migration):
                 ('brief', models.CharField(default=b'', max_length=100)),
                 ('type', models.CharField(max_length=100)),
                 ('post_image', models.CharField(max_length=200, null=True)),
-                ('post_time', models.DateTimeField(auto_now_add=True, verbose_name=b'time_to_post')),
+                ('post_time', models.DateTimeField(auto_now=True, verbose_name=b'time_to_post')),
                 ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
+        ),
+        migrations.AddField(
+            model_name='picture',
+            name='article',
+            field=models.ForeignKey(to='blog.Post'),
         ),
     ]
