@@ -1,0 +1,50 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<div class="nav" id ="navtest">	 
+		<a href="{%url 'blog:myfollowing' request.user.id%}" target="_black" >&nbsp;&nbsp;关注</a>
+		<a href="{%url 'blog:myfollowers' request.user.id%}" target="_black" >&nbsp;&nbsp;粉丝</a>
+		<p><i id="navslip"></i></p>	 
+</div>
+<div class ="followed-container">
+{%for fans in my_followed_list%}
+<p>
+<br />
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<img src="/static/images/{{fans.avatar}}"width="30" class="img-circle"></span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:get_information' fans.id %} >{{fans.username}}</a></span>
+{%if fans not in my_followers_list%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:follow' fans.id%}>+关注</a></span>
+{%else%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:unfollow' fans.id%}>-取消关注</a></span>
+{%endif%}
+</p>
+{%endfor%}
+</div>
+<script>  
+	$(function (){	
+		setSlip();	
+	});	 
+	var setSlip = function(){  
+		var slip = $('#navslip');  
+		var a = $('#navtest a:first');	
+		//初始化滑块	 
+		slip.css({	
+			'width':a.width()+10,  
+			'left' :parseInt(a.position().left) + 5 +'px'  
+		});	 
+		$('#navtest a').mouseenter(function(){	
+			//显示滑块	
+			if(slip.css('display') == 'none'){	
+				slip.show();  
+			};	
+			//移动滑块	
+			slip.stop().animate({  
+				width: $(this).width()+10,	
+				left:  parseInt($(this).position().left) + 5 +'px'	
+			},300);	 
+		});	 
+};
+</script>  
+</div>
+{%endblock%}

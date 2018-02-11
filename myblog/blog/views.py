@@ -65,49 +65,56 @@ def index(request):
 	print 'aa'
 	for article in article_list:
 		for img in img_list:
-			print img.article
 			if img.article.title==article.title:
-				print img.image_url
 				print "right"
 		print article.title
+		print article.collection.all()
+		print request.user
 	#return render_to_response("index.html",{"article_list":article_list})
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
 	img_list = Picture.objects.filter(type=0)
 	for article in article_list:
 		print article.title
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 
 def foods(request):
 	article_list = Post.objects.filter(type=1).order_by('-post_time')
 	img_list = Picture.objects.filter(type=1)
 	for article in article_list:
 		print article.title
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def movies(request):
 	article_list = Post.objects.filter(type=3).order_by('-post_time')
 	img_list = Picture.objects.filter(type=3)
 	for article in article_list:
 		print article.title
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def reading(request):
 	article_list = Post.objects.filter(type=2).order_by('-post_time')
 	img_list = Picture.objects.filter(type=2)
 	for article in article_list:
 		print article.title
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def notes(request):
 	article_list = Post.objects.filter(type=4).order_by('-post_time')
 	img_list = Picture.objects.filter(type=4)
 	for article in article_list:
 		print article.title,article.author.id
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	mycollections_list = request.user.collector.all()
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def home(request,user_id):
-	article_list = request.user.post_set.all().order_by('-post_time')
+	article_list = request.user.author.all().order_by('-post_time')
 	img_list = Picture.objects.all()
+	mycollections_list = request.user.collector.all()
 	print article_list
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list})
+	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 @csrf_exempt
 def blog_post(request,user_id):
 	if request.method == 'POST':
@@ -164,16 +171,20 @@ def get_information(request,user_id):
 	img_list = Picture.objects.all()
 	title = user.username + u"的个人信息主页"
 	followers_list= user.get_followers()
+	my_followers_list=request.user.get_followers()
 	print request.user
-	print followers_list
+	print followers_list,'a1a2'
 	followed_list = user.get_followed()
 	print followed_list
+	mycollections_list = request.user.collector.all()
 	return render(request,'information.html',{"user":user,
 											"article_list":article_list,
 											"img_list":img_list,
 											"title":title,
+											"mycollections_list":mycollections_list,
 											"followers_list":followers_list,
 											"followed_list":followed_list,
+											"my_followers_list":my_followers_list,
 											"followers_length":len(followers_list),
 											"followed_length":len(followed_list)})
 @csrf_exempt
@@ -184,6 +195,23 @@ def edit(request,user_id):
 			request.user.username =editform.cleaned_data['username']
 			request.user.email =editform.cleaned_data['email']
 			request.user.mysignature =editform.cleaned_data['mysignature']
+			try:
+				print 'test1'
+				avatar = request.FILES['file0']
+				print avatar.name
+				img = Image.open(avatar)
+				print 'test2'
+				img.thumbnail((500,500),Image.ANTIALIAS)
+				name = request.user.username + '-'+ avatar.name
+				for type in ['gif','jpeg','jpg','png','JPG']:
+					if avatar.name.endswith(type):
+						img.save("E:\\gitprojects\\myblog2\\myblog\\blog\\static\\images\\%s"%name)
+						break
+					else:
+						print 'nonono'
+			except Exception,e:
+				return HttpResponse("Error %s"%e)#异常，查看报错信息
+			request.user.avatar = name
 			request.user.save()
 			print u'修改成功'
 		else:
@@ -224,5 +252,29 @@ def set_follower(selfuser,id):
 	friendship.save()
 	print u'关注shibai6'
 	return True
+def collect(request,article_id):
+	article = get_object_or_404(Post,pk=article_id)
+	article.collection.add(request.user)
+	article.save()
+	return redirect(reverse('blog:index'))
+def no_collect(request,article_id):
+	article = get_object_or_404(Post,pk=article_id)
+	article.collection.remove(request.user)
+	article.save()
+	return redirect(reverse('blog:index'))
+def collections(request,user_id):
+	article_list = request.user.collector.all().order_by('-post_time')
+	mycollections_list = request.user.collector.all()
+	return render(request,'collections.html',{"article_list":article_list,"mycollections_list":mycollections_list})
+def myfollowing(request ,user_id):
+	my_followers_list=request.user.get_followers()
+	print my_followers_list
+	return render(request,'following.html',{"my_followers_list":my_followers_list})
+def myfollowers(request,user_id):
+	my_followers_list=request.user.get_followers()
+	print my_followers_list
+	my_followed_list = request.user.get_followed()
+	print my_followed_list
+	return render(request,'followers.html',{"my_followers_list":my_followers_list,"my_followed_list":my_followed_list})
 def submit_post(request):
 	pass

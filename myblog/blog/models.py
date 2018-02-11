@@ -33,7 +33,9 @@ class Post(models.Model):
 	type = models.CharField(max_length=100)
 	post_image = models.CharField(max_length=200,null=True)
 	post_time = models.DateTimeField('time_to_post',auto_now=True)
-	author = models.ForeignKey(User)
+	author = models.ForeignKey(User,related_name="author")
+	collection = models.ManyToManyField(User,related_name="collector")
+	heart = models.ManyToManyField(User,related_name="heart_man")
 	def __unicode__(self):
 		return self.title#返回unicode
 class Picture(models.Model):

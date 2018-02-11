@@ -3441,3 +3441,39 @@
 
 		}
 
+#navtest{  
+            left:0px;  
+            right:0px;  
+            width:100%;  
+            margin: auto;  
+            height:37px;  
+        }  
+#navtest a{  
+            padding:10px;  
+            color:black;  
+            line-height:30px;  
+            text-decoration:none;  
+            height:37px;  
+        }  
+#navslip{  
+            height:2px;  
+            background-color:#8f919e;   
+            bottom:7px;  
+			position:relative;
+            width:0px;  
+            left:0px;  
+            overflow:hidden;
+}
+#followings {
+			display: none;
+}
+#followed {
+			display: none;
+}
+.active {
+      color: white;
+      background-color: black;
+    }
+.none {
+      background-color: whitesmoke;
+        }  

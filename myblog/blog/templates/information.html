@@ -5,12 +5,9 @@
 <div class ="information">
 <table>
 	<tr valign="top">
-	<td><img src="/static/images/{{user.avatar}}"width="178" height="200"></td>
-	<td><input type="submit" value="更换" ></td>
-	</tr>
-    <tr valign="top">
-        <td>
+		<td>
 			<h1>&nbsp;&nbsp;<i>昵称：</i>{{user.username}}</h1>
+			<h2>&nbsp;&nbsp;<img src="/static/images/{{user.avatar}}"width="178" height="200"></h2>
 			<p>&nbsp;&nbsp;<i>简介：</i>{% if user.mysignature %}{{user.mysignature}}{% endif %}</p>
 			<p>&nbsp;&nbsp;<i>邮箱：</i>{{user.email}}</p>
 			<p>&nbsp;&nbsp;<i>注册时间：</i>{{user.user_register_time}}</p>
@@ -19,19 +16,19 @@
 			{%if request.user.id != user.id%}
 			<p>
 			  <span>&nbsp;&nbsp;<i>他的关注：</i>
-				<span id ="followers"><a href ="#">{{followers_length}}</a></span>
+				<span id ="followers" onclick ="changeStatus('followings')"><a href ="#followings">{{followers_length}}</a></span>
 			  </span>
 			  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>他的粉丝：</i>
-				<span id ="followeds"><a href ="#">{{followed_length}}</a></span>
+				<span id ="followeds" onclick ="changeStatus('followed')"><a href ="#followed">{{followed_length}}</a></span>
 			  </span>
 			</p>
 			{%else%}
 			<p>
 			  <span>&nbsp;&nbsp;<i>我的关注：</i>
-				<span id ="followers"><a href ="#">{{followers_length}}</a></span>
+				<span id ="followers" onclick ="changeStatus('followings')" ><a href ="#followings">{{followers_length}}</a></span>
 			  </span>
-			  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>我的粉丝：</i>
-				<span id ="followeds"><a href ="#">{{followed_length}}</a></span>
+			  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>我的粉丝：</i>
+				<span id ="followeds" onclick ="changeStatus('followed')" ><a href ="#followed">{{followed_length}}</a></span>
 			  </span>
 			</p>
 			{%endif%}
@@ -53,13 +50,105 @@
 		</td>
 	</tr>
 </table>
+<div class="nav" id ="navtest">	 
+		<a href="javascript:void(0)" onclick ="changeStatus('p1')" target="_black" >&nbsp;&nbsp;最新动态</a> 
+		<a href="javascript:void(0)" onclick ="changeStatus('followings')" target="_black" id="o1" class="none">&nbsp;&nbsp;关注</a>
+		<a href="javascript:void(0)" onclick ="changeStatus('followed')" target="_black" id="o2" class="none">&nbsp;&nbsp;粉丝</a>
+		<p><i id="navslip"></i></p>	 
+	</div>	
+<div class ="post-container" id ="p1">
 {%if article_list%}
-<h1>&nbsp;&nbsp;<i>最近发表的博客：</i></h1>
-<div class ="post-container">
 	{%for article in article_list%}
 	{%include 'post.html'%}
 	{%endfor%}
-</div>
 {%endif%}
+</div>
+
+<div class ="following-container" id ="followings">
+{%for follower in followers_list%}
+<p>
+<br />
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<img src="/static/images/{{follower.avatar}}"width="30" class="img-circle"></span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:get_information' follower.id %} >{{follower.username}}</a></span>
+{%if follower not in my_followers_list%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:follow' follower.id%}>+关注</a></span>
+{%else%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:unfollow' follower.id%}>-取消关注</a></span>
+{%endif%}
+</p>
+{%endfor%}
+</div>
+
+<div class ="followed-container" id ="followed">
+{%for fans in followed_list%}
+<p>
+<br />
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<img src="/static/images/{{fans.avatar}}"width="30" class="img-circle"></span>
+<span>&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:get_information' fans.id %} >{{fans.username}}</a></span>
+{%if fans not in my_followers_list%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:follow' fans.id%}>+关注</a></span>
+{%else%}
+<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:unfollow' fans.id%}>-取消关注</a></span>
+{%endif%}
+</p>
+{%endfor%}
+</div>
+<script>  
+	$(function (){	
+		setSlip();	
+	});	 
+	var setSlip = function(){  
+		var slip = $('#navslip');  
+		var a = $('#navtest a:first');	
+		//初始化滑块	 
+		slip.css({	
+			'width':a.width()+10,  
+			'left' :parseInt(a.position().left) + 5 +'px'  
+		});	 
+		$('#navtest a').mouseenter(function(){	
+			//显示滑块	
+			if(slip.css('display') == 'none'){	
+				slip.show();  
+			};	
+			//移动滑块	
+			slip.stop().animate({  
+				width: $(this).width()+10,	
+				left:  parseInt($(this).position().left) + 5 +'px'	
+			},300);	 
+		});	 
+};	
+$('#navtest a').click(function () {
+	var f = this;
+	$('#navtest a').each(function () {
+	  this.className = this == f ? 'active' : 'none'
+	});
+  });
+function changeStatus(t){ 
+if (t=='p1'){
+	document.getElementById('followings').style.display='none';
+	document.getElementById('followed').style.display='none';
+	document.getElementById('o1').className = 'none';
+	document.getElementById('o2').className = 'none';
+	document.getElementById('p1').style.display='block';
+	document.getElementById('p1').className = 'active';
+}
+else if(t=='followed'){
+	document.getElementById('followings').style.display='none';
+	document.getElementById('p1').style.display='none';
+	document.getElementById('o1').className = 'none';
+	document.getElementById('p1').className = 'none';
+	document.getElementById('followed').style.display='block';
+	document.getElementById('o2').className = 'active';
+}
+else{
+	document.getElementById('followed').style.display='none';
+	document.getElementById('p1').style.display='none';
+	document.getElementById('o2').className = 'none';
+	document.getElementById('p1').className = 'none';
+	document.getElementById('followings').style.display='block';
+	document.getElementById('o1').className = 'active';
+}
+}
+</script>  
 </div>
 {%endblock%}

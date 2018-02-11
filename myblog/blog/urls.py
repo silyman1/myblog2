@@ -17,6 +17,11 @@ urlpatterns = [
 	url(r'^author/(?P<user_id>[0-9]+)/edit/$', views.edit, name='edit'),
 	url(r'^author/(?P<user_id>[0-9]+)/follow/$', views.follow, name='follow'),
 	url(r'^author/(?P<user_id>[0-9]+)/unfollow/$', views.unfollow, name='unfollow'),
+	url(r'^article/(?P<article_id>[0-9]+)/collect/$', views.collect, name='collect'),
+	url(r'^article/(?P<article_id>[0-9]+)/no_collect/$', views.no_collect, name='no_collect'),
+	url(r'^author/(?P<user_id>[0-9]+)/collections/$', views.collections, name='collections'),
+	url(r'^author/(?P<user_id>[0-9]+)/following/$', views.myfollowing, name='myfollowing'),
+	url(r'^author/(?P<user_id>[0-9]+)/followers/$', views.myfollowers, name='myfollowers'),
     #url(r'^login/$', views.login_view name='login') ,
     #url(r'^logout/$', views.logout_view name='logout'),
 ]

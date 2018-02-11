@@ -7,7 +7,7 @@
 			</div>
 			<div class="meta">
 				<time class="published" >{{article.post_time}}</time>
-				<a href={%url 'blog:get_information' article.author.id %} class="author"><span class="name">{{article.author.username}}</span><img src="" alt="" /></a>
+				<a href={%url 'blog:get_information' article.author.id %} class="author"><span class="name">{{article.author.username}}</span><img src="/static/images/{{article.author.avatar}}"width="30" class="img-circle"></a>
 			</div>
 		</header>
 <span>
@@ -23,7 +23,11 @@
 				<li><a href="#" class="button big">查看更多</a></li>
 			</ul>
 			<ul class="stats">
-				<li><a href="#">General</a></li>
+				{%if article in mycollections_list%}
+				<li><a href={%url 'blog:no_collect' article.id %}>取消收藏</a></li>
+				{%else%}
+				<li><a href={%url 'blog:collect' article.id %}>收藏</a></li>
+				{%endif%}
 				<li><a href="#" class="icon fa-heart">28</a></li>
 				<li><a href="#" class="icon fa-comment">128</a></li>
 			</ul>

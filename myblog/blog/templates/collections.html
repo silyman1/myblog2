@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<div class ="post-container">
+{%if article_list%}
+	{%for article in article_list%}
+	{%include 'post.html'%}
+	{%endfor%}
+{%else%}
+<div>暂无收藏</div>
+{%endif%}
+</div>
+{%endblock%}

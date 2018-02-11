@@ -7,6 +7,7 @@
 <table>
     <tr valign="top">
         <td>
+			<h2><img src="/static/images/{{request.user.avatar}}"width="178" height="200" id="img0">&nbsp;&nbsp;&nbsp;<input type="file" name="file0" id="file0" value= "更换头像" /></h2>
 			<h1><i>昵称：</i>{{editform.username}}</h1>
 			<p><i>邮箱：</i>{{editform.email}}</p>
 			<p><i>简介：</i>{{editform.mysignature}}</p>
@@ -16,5 +17,36 @@
 	</tr>
 </table>
 </form>
-
+<script>    
+$("#file0").change(function(){  
+ if (this.files.length>1){
+  alert("最多只能上传1张图片！");
+  window.location.reload();
+  }
+  else{
+  file = this.files[0];
+  if(file.type != "image/jpg" && file.type != "image/JPG" && file.type != "image/jpeg"&&file.type !="image/png"&&file.type !="image/gif"){ 
+            alert("图片类型必须是.gif,jpeg,jpg,png中的一种");
+			window.location.reload();
+            return;
+	}
+  var obj
+  var objUrl = getObjectURL(this.files[0]) ;   
+  if (objUrl) {  
+    $("#img0").attr("src", objUrl) ;  
+  }  
+}
+}) ;    
+function getObjectURL(file) {  
+  var url = null ;   
+  if (window.createObjectURL!=undefined) { // basic  
+    url = window.createObjectURL(file) ;  
+  } else if (window.URL!=undefined) { // mozilla(firefox)  
+    url = window.URL.createObjectURL(file) ;  
+  } else if (window.webkitURL!=undefined) { // webkit or chrome  
+    url = window.webkitURL.createObjectURL(file) ;  
+  }  
+  return url ;  
+}  
+</script>
 {%endblock%}
