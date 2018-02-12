@@ -1,0 +1,77 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<section id="intro">
+<header>
+	<h2>{{article.title}}</h2>
+	<p>{{article.brief}}</p>
+	<br />
+</header>
+	<p><a href={%url 'blog:get_information' article.author.id %} class="logo"><img src="/static/images/{{article.author.avatar}}" alt="" class="img-circle" /></a></p>
+	<p><a href={%url 'blog:get_information' article.author.id %}>{{article.author.username}}</a></p>
+	<div >
+		<span>{{article.post_time}}</span>
+		<span><a href="#">&nbsp;收藏:{{article.collection_num}}</a></span>
+		<span><a href="#" class="icon fa-heart">&nbsp;{{article.heart_num}}</a></span>
+		<span><a href="#" class="icon fa-comment">&nbsp;{{article.comment_num}}</a></span>
+</section>
+<div >
+<span>
+		{%if article.img_num == 1%}
+		{%for img in img_list%}
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="image featured" ><img src="/static/images/{{img.image_url}}" alt="" /></a>
+		{%endfor%}
+		{%else%}
+		{%for img in img_list%}
+		<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' height="280" width="280" alt="" /></a><span>
+
+		{%endfor%}
+		{%endif%}
+		<p>{{article.body}}</p>
+</span>
+</div>
+<div id="heart-container" style="text-align: center">
+{%if article not in heart_list%}
+	<p class="like" style="text-align: center"><a href = {%url 'blog:heart' article.id %}>♥</a></p>
+	<p style="font-size:30px">喜欢</p>
+{%else%}
+	<p class="like cs" style="text-align: center"><a href = {%url 'blog:unheart' article.id %}>♥</a></p>
+	<p style="font-size:30px">取消喜欢</p>
+{%endif%}
+</div>
+<br />
+<div >
+<form action="{%url 'blog:comment' article.id%}" method="post" name ="comment">
+<p>&nbsp;&nbsp;&nbsp;&nbsp;{{commentform.content}}</p>
+<br />
+{%csrf_token%}
+<p style = "text-align:right;"><input type="submit" value="评论">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+</form>
+</div>
+<div class="comment-container">
+<h3>评论列表:</h3>
+{%for comment in comment_list%}
+<p>
+	<span>
+	  <a href={%url 'blog:get_information' article.author.id %}>
+		<img src="/static/images/{{article.author.avatar}}"width="30" class="img-circle">
+	    <span class="name">{{comment.commentor}}:</span>
+	  </a>
+	<span>{{comment.content}}&nbsp;&nbsp;</span>
+	<span>评论于：&nbsp;&nbsp;{{comment.timestamp}}</span>
+</p>
+{%endfor%}
+</div>
+<script>
+        $(function () {            
+            $(".like").click(function () {
+                $(this).toggleClass('cs');
+            })
+        })
+</script>
+
+
+
+
+{%endblock%}

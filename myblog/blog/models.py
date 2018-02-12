@@ -36,6 +36,10 @@ class Post(models.Model):
 	author = models.ForeignKey(User,related_name="author")
 	collection = models.ManyToManyField(User,related_name="collector")
 	heart = models.ManyToManyField(User,related_name="heart_man")
+	heart_num = models.PositiveIntegerField(default = 0)
+	img_num = models.PositiveIntegerField(default = 0)
+	comment_num = models.PositiveIntegerField(default = 0)
+	collection_num = models.PositiveIntegerField(default = 0)
 	def __unicode__(self):
 		return self.title#返回unicode
 class Picture(models.Model):
@@ -47,3 +51,9 @@ class Picture(models.Model):
 class Friendship(models.Model):
 	followed = models.ForeignKey(User,related_name="followed")
 	follower = models.ForeignKey(User,related_name="follower")
+
+class Comment(models.Model):
+	commentor = models.ForeignKey(User,on_delete=models.CASCADE)
+	article = models.ForeignKey(Post,on_delete=models.CASCADE)
+	content = models.CharField(max_length=100,default="")
+	timestamp = models.DateTimeField('time_to_comment',auto_now=True)

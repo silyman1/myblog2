@@ -1900,7 +1900,6 @@
 		outline: 0;
 		padding: 0 1em;
 		text-decoration: none;
-		width: 100%;
 	}
 
 		input[type="text"]:invalid,
@@ -3477,3 +3476,7 @@
 .none {
       background-color: whitesmoke;
         }  
+		
+
+.like{ font-size:88px;  color:#ccc; cursor:pointer;}
+.cs{color:#f00;}

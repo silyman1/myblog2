@@ -11,16 +11,24 @@
 			</div>
 		</header>
 <span>
+		{%if article.img_num == 1%}
+		{%for img in img_list%}
+		{%if img.article == article%}
+<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' alt="" /></a>
+		{%endif%}
+		{%endfor%}
+		{%else%}
 		{%for img in img_list%}
 		{%if img.article == article%}
 <a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' height="280" width="280" alt="" /></a>
 		{%endif%}
 		{%endfor%}
+		{%endif%}
 		<p>{{article.body}}</p>
 </span>
 		<footer>
 			<ul class="actions">
-				<li><a href="#" class="button big">查看更多</a></li>
+				<li><a href={%url 'blog:post_detail' article.id%} class="button big">查看详情</a></li>
 			</ul>
 			<ul class="stats">
 				{%if article in mycollections_list%}
@@ -28,8 +36,8 @@
 				{%else%}
 				<li><a href={%url 'blog:collect' article.id %}>收藏</a></li>
 				{%endif%}
-				<li><a href="#" class="icon fa-heart">28</a></li>
-				<li><a href="#" class="icon fa-comment">128</a></li>
+				<li><a href="#" class="icon fa-heart">{{article.heart_num}}</a></li>
+				<li><a href="#" class="icon fa-comment">{{article.comment_num}}</a></li>
 			</ul>
 		</footer>
 		

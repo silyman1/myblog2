@@ -19,9 +19,13 @@ urlpatterns = [
 	url(r'^author/(?P<user_id>[0-9]+)/unfollow/$', views.unfollow, name='unfollow'),
 	url(r'^article/(?P<article_id>[0-9]+)/collect/$', views.collect, name='collect'),
 	url(r'^article/(?P<article_id>[0-9]+)/no_collect/$', views.no_collect, name='no_collect'),
+	url(r'^article/(?P<article_id>[0-9]+)/heart/$', views.heart, name='heart'),
+	url(r'^article/(?P<article_id>[0-9]+)/unheart/$', views.unheart, name='unheart'),
 	url(r'^author/(?P<user_id>[0-9]+)/collections/$', views.collections, name='collections'),
 	url(r'^author/(?P<user_id>[0-9]+)/following/$', views.myfollowing, name='myfollowing'),
 	url(r'^author/(?P<user_id>[0-9]+)/followers/$', views.myfollowers, name='myfollowers'),
+	url(r'^article/(?P<article_id>[0-9]+)/detail/$', views.post_detail, name='post_detail'),
+	url(r'^article/(?P<article_id>[0-9]+)/comment/$', views.comment, name='comment'),
     #url(r'^login/$', views.login_view name='login') ,
     #url(r'^logout/$', views.logout_view name='logout'),
 ]
