@@ -9,6 +9,7 @@ from .forms import LoginForm,PostForm,EditForm,CommentForm
 from .models import User,Post,Picture,Friendship,Comment
 from PIL import Image
 from django.utils import timezone
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 @csrf_exempt
 def register(request):
@@ -60,6 +61,14 @@ def index(request):
 	print request.user.is_authenticated()
 	#article_list = get_object_or_404
 	article_list = Post.objects.order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.all()
 	print "img",img_list
 	print 'aa'
@@ -67,9 +76,6 @@ def index(request):
 		for img in img_list:
 			if img.article.title==article.title:
 				print "right"
-		print article.title
-		print article.collection.all()
-		print request.user
 	#return render_to_response("index.html",{"article_list":article_list})
 	if request.user.is_authenticated():
 		mycollections_list = request.user.collector.all()
@@ -78,6 +84,14 @@ def index(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.filter(type=0)
 	for article in article_list:
 		print article.title
@@ -89,6 +103,14 @@ def travel(request):
 
 def foods(request):
 	article_list = Post.objects.filter(type=1).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.filter(type=1)
 	for article in article_list:
 		print article.title
@@ -99,6 +121,14 @@ def foods(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def movies(request):
 	article_list = Post.objects.filter(type=3).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.filter(type=3)
 	for article in article_list:
 		print article.title
@@ -109,6 +139,14 @@ def movies(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def reading(request):
 	article_list = Post.objects.filter(type=2).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.filter(type=2)
 	for article in article_list:
 		print article.title
@@ -119,6 +157,14 @@ def reading(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def notes(request):
 	article_list = Post.objects.filter(type=4).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.filter(type=4)
 	for article in article_list:
 		print article.title,article.author.id
@@ -130,6 +176,14 @@ def notes(request):
 @login_required
 def home(request,user_id):
 	article_list = request.user.author.all().order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.all()
 	mycollections_list = request.user.collector.all()
 	print article_list
@@ -188,6 +242,14 @@ def blog_post(request,user_id):
 def get_information(request,user_id):
 	user = get_object_or_404(User,pk= user_id)
 	article_list = Post.objects.filter(author=user).order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
 	img_list = Picture.objects.all()
 	title = user.username + u"的个人信息主页"
 	followers_list= user.get_followers()
@@ -298,8 +360,18 @@ def no_collect(request,article_id):
 @login_required
 def collections(request,user_id):
 	article_list = request.user.collector.all().order_by('-post_time')
-	mycollections_list = request.user.collector.all()
-	return render(request,'collections.html',{"article_list":article_list,"mycollections_list":mycollections_list})
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
+	img_list = []
+	for article in article_list:
+		img_list += Picture.objects.filter(article=article)
+	return render(request,'collection_or_heart.html',{"article_list":article_list,"img_list":img_list})
 @login_required
 def myfollowing(request ,user_id):
 	my_followers_list=request.user.get_followers()
@@ -334,6 +406,21 @@ def unheart(request,article_id):
 	article.heart_num -= 1
 	article.save()
 	return redirect(reverse('blog:post_detail',args=(article_id,)))
+@login_required
+def hearts(request,user_id):
+	article_list = request.user.heart_man.all().order_by('-post_time')
+	p = Paginator(article_list, 4)
+	page = request.GET.get('page')
+	try:
+		article_list = p.page(page)
+	except PageNotAnInteger:
+		article_list = p.page(1)
+	except EmptyPage:
+		article_list = p.page(p.num_pages)
+	img_list = []
+	for article in article_list:
+		img_list += Picture.objects.filter(article=article)
+	return render(request,'collection_or_heart.html',{"article_list":article_list,"img_list":img_list})
 @csrf_exempt
 def comment(request,article_id):
 	article = get_object_or_404(Post,pk=article_id)
@@ -345,8 +432,23 @@ def comment(request,article_id):
 			comment.article = article
 			comment.commentor = request.user
 			comment.save()
+			article.comment_num +=1
+			article.save()
 			return redirect(reverse('blog:post_detail',args=(article_id,)))
 	else:
 		return HttpResponse("评论失败")
+@login_required
+def delete(request,article_id):
+	article = get_object_or_404(Post,pk=article_id)
+	article.delete()
+	return redirect(reverse("blog:home",args=(request.user.id,)))
+@login_required
+def delete_comment(request,comment_id):
+	comment = get_object_or_404(Comment,pk=comment_id)
+	article = comment.article
+	comment.delete()
+	article.comment_num -=1
+	article.save()
+	return redirect(reverse("blog:post_detail",args=(article.id,)))
 def submit_post(request):
 	pass

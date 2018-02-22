@@ -20,4 +20,4 @@ class EditForm(forms.Form):
 	email = forms.EmailField(label='邮箱',max_length=50)
 	mysignature = forms.CharField(widget=forms.Textarea(),max_length=100,required=False)
 class CommentForm(forms.Form):
-	content = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'在此评论区写下你想写的内容：','cols':'110','rows':'5'}))
+	content = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'在此评论区写下你想写的内容：','cols':'113','rows':'5'}))

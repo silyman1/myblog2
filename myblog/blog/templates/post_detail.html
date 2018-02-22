@@ -50,7 +50,7 @@
 </form>
 </div>
 <div class="comment-container">
-<h3>评论列表:</h3>
+<h3>评论列表({{article.comment_num}}):</h3>
 {%for comment in comment_list%}
 <p>
 	<span>
@@ -59,7 +59,10 @@
 	    <span class="name">{{comment.commentor}}:</span>
 	  </a>
 	<span>{{comment.content}}&nbsp;&nbsp;</span>
-	<span>评论于：&nbsp;&nbsp;{{comment.timestamp}}</span>
+	<span>评论于：&nbsp;&nbsp;&nbsp;&nbsp;{{comment.timestamp}}</span>
+	{%if request.user == article.author%}
+	<span><a href={%url 'blog:delete_comment' comment.id%}>&nbsp;&nbsp;&nbsp;&nbsp;删除评论</span>
+	{%endif%}
 </p>
 {%endfor%}
 </div>

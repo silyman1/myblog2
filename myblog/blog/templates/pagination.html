@@ -1,0 +1,39 @@
+{% load blog_extras %}
+<nav aria-label="Page navigation" style = "text-align:center;">
+  <ul class="pagination">
+    <span>
+    {% if article_list.has_previous %}
+	  <a href="?page={{article_list.previous_page_number}}" aria-label="Previous">
+	    <span aria-hidden="true">&laquo;</span>
+	  </a>
+	</span>
+	{%else%}
+	<span class="disabled">
+	    <span aria-hidden="true">&laquo;</span>
+	  </a>
+	</span>
+	{%endif%}
+	{%for pg in article_list.paginator.page_range %}
+	{%if article_list.number == pg %}
+	  <span class="active"><a href="?page={{pg}}">{{ pg }}</a></span>
+	{%else%}
+	  <span><a href="?page={{pg}}">{{ pg }}</a></span>
+	{%endif%}
+	{%endfor%}
+    {% if article_list.has_next %}
+	<span>
+	  <a href="?page={{article_list.next_page_number}}" aria-label="Next">
+	    <span aria-hidden="true">&raquo;</span>
+	  </a>
+	</span>
+	{%else%}
+	<span class="disabled">
+	    <span aria-hidden="true">&raquo;</span>
+	  </a>
+	</span>
+	{%endif%}
+	<span class="current">
+        &nbsp;&nbsp;第 {{ article_list.number }} 页/共 {{ article_list.paginator.num_pages }} 页
+    </span>
+  </ul>
+</nav>

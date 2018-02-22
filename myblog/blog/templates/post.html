@@ -31,6 +31,9 @@
 				<li><a href={%url 'blog:post_detail' article.id%} class="button big">查看详情</a></li>
 			</ul>
 			<ul class="stats">
+				{%if article.author.username == request.user.username%}
+				<li><a href={%url 'blog:delete' article.id %}>删除</a></li>
+				{%endif%}
 				{%if article in mycollections_list%}
 				<li><a href={%url 'blog:no_collect' article.id %}>取消收藏</a></li>
 				{%else%}

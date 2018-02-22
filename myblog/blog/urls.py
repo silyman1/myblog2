@@ -22,10 +22,13 @@ urlpatterns = [
 	url(r'^article/(?P<article_id>[0-9]+)/heart/$', views.heart, name='heart'),
 	url(r'^article/(?P<article_id>[0-9]+)/unheart/$', views.unheart, name='unheart'),
 	url(r'^author/(?P<user_id>[0-9]+)/collections/$', views.collections, name='collections'),
+	url(r'^author/(?P<user_id>[0-9]+)/hearts/$', views.hearts, name='hearts'),
 	url(r'^author/(?P<user_id>[0-9]+)/following/$', views.myfollowing, name='myfollowing'),
 	url(r'^author/(?P<user_id>[0-9]+)/followers/$', views.myfollowers, name='myfollowers'),
 	url(r'^article/(?P<article_id>[0-9]+)/detail/$', views.post_detail, name='post_detail'),
 	url(r'^article/(?P<article_id>[0-9]+)/comment/$', views.comment, name='comment'),
+	url(r'^article/(?P<article_id>[0-9]+)/delete$', views.delete, name='delete'),
+	url(r'^comment/(?P<comment_id>[0-9]+)/delete$', views.delete_comment, name='delete_comment'),
     #url(r'^login/$', views.login_view name='login') ,
     #url(r'^logout/$', views.logout_view name='logout'),
 ]

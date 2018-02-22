@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^blog/', include('blog.urls',namespace="blog")),
     url(r'^accounts/login/$', login_view),
     url(r'^accounts/logout/$', logout_view),
+    url(r'^search/$', include('haystack.urls')),
 ]
