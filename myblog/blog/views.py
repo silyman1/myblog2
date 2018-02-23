@@ -10,6 +10,34 @@ from .models import User,Post,Picture,Friendship,Comment
 from PIL import Image
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import random
+class CustemPaginator(Paginator):
+	def __init__(self, current_page, max_pager_num, *args, **kwargs):
+		# 当前页
+		self.current_page = int(current_page)
+		# 最多显示的页码数量
+		self.max_pager_num = int(max_pager_num)
+		super(CustemPaginator,self).__init__(*args, **kwargs)
+	def page_num_range(self):
+		# 当前页
+		# self.current_page
+		# 最多显示的页码数量 11
+		# self.per_pager_num
+		# 总页数
+		# self.num_pages
+		# 判断如果页面总数量小于显示页面的总数量，那么返回最大的页面总数量。
+		if self.num_pages < self.max_pager_num:
+			return range(1, self.num_pages + 1)
+		part = int(self.max_pager_num / 2)
+		# 判断当前页小于等于最大显示页的一半，那么返回1到最大显示页数量。
+		if self.current_page <= part:
+			return range(1, self.max_pager_num + 1)
+		# 当选择页数加上显示页数的一半的时候，说明越界了，例如最大也数是15，显示页数是10，我选择11页，那么11+5等于16，大于15，那么就显示总页数15-11+1，15+1
+		if (self.current_page + part) > self.num_pages:
+		# 那么返回总页数前去当前显示页数个数+1的值，和总页数+1的值。
+			return range(self.num_pages - self.max_pager_num + 1, self.num_pages + 1)
+		# 当选择页大于当前总页数的一半的时候，返回当前选择页的前五个和后五个页数。
+		return range(self.current_page - part, self.current_page + part + 1)
 # Create your views here.
 @csrf_exempt
 def register(request):
@@ -61,8 +89,14 @@ def index(request):
 	print request.user.is_authenticated()
 	#article_list = get_object_or_404
 	article_list = Post.objects.order_by('-post_time')
-	p = Paginator(article_list, 4)
+	introduce_list = Post.objects.order_by('-heart_num')[:4]
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -81,11 +115,23 @@ def index(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	slide_list=[]
+	while True:
+		slide_item = random.choice(img_list)
+		if slide_item:
+			slide_list.append(slide_item)
+		if len(slide_list)>=4:
+			break
+	return render(request,'index.html',{"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -103,8 +149,13 @@ def travel(request):
 
 def foods(request):
 	article_list = Post.objects.filter(type=1).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -121,8 +172,13 @@ def foods(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def movies(request):
 	article_list = Post.objects.filter(type=3).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -139,8 +195,13 @@ def movies(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def reading(request):
 	article_list = Post.objects.filter(type=2).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -157,8 +218,13 @@ def reading(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def notes(request):
 	article_list = Post.objects.filter(type=4).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -175,9 +241,14 @@ def notes(request):
 	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 @login_required
 def home(request,user_id):
-	article_list = request.user.author.all().order_by('-post_time')
-	p = Paginator(article_list, 4)
+	article_list = Post.objects.filter(author=request.user).order_by('-post_time')
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -230,6 +301,8 @@ def blog_post(request,user_id):
 					pic.article=post
 					print "3"
 					pic.save()
+					post.img_num +=1
+					post.save()
 					print "4"
 			except Exception,e:
 				return HttpResponse("Error %s"%e)#异常，查看报错信息
@@ -242,8 +315,13 @@ def blog_post(request,user_id):
 def get_information(request,user_id):
 	user = get_object_or_404(User,pk= user_id)
 	article_list = Post.objects.filter(author=user).order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -360,8 +438,13 @@ def no_collect(request,article_id):
 @login_required
 def collections(request,user_id):
 	article_list = request.user.collector.all().order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:
@@ -409,8 +492,13 @@ def unheart(request,article_id):
 @login_required
 def hearts(request,user_id):
 	article_list = request.user.heart_man.all().order_by('-post_time')
-	p = Paginator(article_list, 4)
 	page = request.GET.get('page')
+	print 'page:',page
+	#p = Paginator(article_list, 4)
+	try:
+		p = CustemPaginator(page,4,article_list, 4)
+	except:
+		p = CustemPaginator(1,4,article_list, 4)
 	try:
 		article_list = p.page(page)
 	except PageNotAnInteger:

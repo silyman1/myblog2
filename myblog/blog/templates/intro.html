@@ -1,0 +1,14 @@
+<section>
+	<div class="mini-posts">
+		{%for article in introduce_list%}
+			<article class="mini-post">
+				<header>
+					<h3><a href={%url 'blog:post_detail' article.id %}>{{article.title}}</a></h3>
+					<time class="published" >{{article.post_time}}</time>
+					<a href="#" class="author"><img src="/static/images/{{article.author.avatar}}" alt="" /></a>
+				</header>
+				<a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
+			</article>
+		{%endfor%}
+	</div>
+</section>

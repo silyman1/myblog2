@@ -3480,3 +3480,19 @@
 
 .like{ font-size:88px;  color:#ccc; cursor:pointer;}
 .cs{color:#f00;}
+.cc {
+width: 900px;
+overflow:hidden;
+text-overflow:ellipsis;
+cursor: auto;
+color: #999999;
+text-decoration: none;
+}
+.bb {
+    color: #000000;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}

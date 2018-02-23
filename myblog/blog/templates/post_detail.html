@@ -49,23 +49,24 @@
 <p style = "text-align:right;"><input type="submit" value="评论">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
 </form>
 </div>
-<div class="comment-container">
-<h3>评论列表({{article.comment_num}}):</h3>
-{%for comment in comment_list%}
-<p>
-	<span>
-	  <a href={%url 'blog:get_information' article.author.id %}>
-		<img src="/static/images/{{article.author.avatar}}"width="30" class="img-circle">
-	    <span class="name">{{comment.commentor}}:</span>
-	  </a>
-	<span>{{comment.content}}&nbsp;&nbsp;</span>
-	<span>评论于：&nbsp;&nbsp;&nbsp;&nbsp;{{comment.timestamp}}</span>
-	{%if request.user == article.author%}
-	<span><a href={%url 'blog:delete_comment' comment.id%}>&nbsp;&nbsp;&nbsp;&nbsp;删除评论</span>
-	{%endif%}
-</p>
-{%endfor%}
-</div>
+
+<section>
+<h2>评论列表({{article.comment_num}}):</h2>
+	<ul class="posts">
+	{%for comment in comment_list%}
+		<li>
+			<article>
+				<header>
+					<h3>&nbsp;&nbsp;{{comment.content}}&nbsp;&nbsp;</h3>
+					<span class="published">&nbsp;&nbsp;评论于：&nbsp;&nbsp;{{comment.timestamp}}{%if request.user == article.author%}&nbsp;&nbsp;&nbsp;&nbsp;<a href={%url 'blog:delete_comment' comment.id%}>删除评论</a>{%endif%}</span>
+				</header>
+				<span class="name">&nbsp;&nbsp;<a href={%url 'blog:get_information' comment.commentor.id%}>{{comment.commentor}}:</a>&nbsp;&nbsp;</span>
+				<a href={%url 'blog:get_information' comment.commentor.id%}><img src="/static/images/{{article.author.avatar}}"width="30" class="img-circle"></a>
+			</article>
+		</li>
+	{%endfor%}
+	</ul>
+</section>
 <script>
         $(function () {            
             $(".like").click(function () {

@@ -14,7 +14,7 @@
 		{%if article.img_num == 1%}
 		{%for img in img_list%}
 		{%if img.article == article%}
-<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' alt="" /></a>
+<a href="#" class="image featured" ><img src='/static/images/{{img.image_url}}' alt="" /></a>
 		{%endif%}
 		{%endfor%}
 		{%else%}
@@ -24,10 +24,11 @@
 		{%endif%}
 		{%endfor%}
 		{%endif%}
-		<p>{{article.body}}</p>
+		<p class="bb">{{article.body}}</p>
 </span>
 		<footer>
 			<ul class="actions">
+			<br>
 				<li><a href={%url 'blog:post_detail' article.id%} class="button big">查看详情</a></li>
 			</ul>
 			<ul class="stats">

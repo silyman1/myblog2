@@ -1,6 +1,7 @@
-{% load blog_extras %}
+
 <nav aria-label="Page navigation" style = "text-align:center;">
   <ul class="pagination">
+  <span><a href="?page=1" >首页</a></span>&nbsp;&nbsp;
     <span>
     {% if article_list.has_previous %}
 	  <a href="?page={{article_list.previous_page_number}}" aria-label="Previous">
@@ -13,27 +14,28 @@
 	  </a>
 	</span>
 	{%endif%}
-	{%for pg in article_list.paginator.page_range %}
+	{%for pg in article_list.paginator.page_num_range %}
 	{%if article_list.number == pg %}
-	  <span class="active"><a href="?page={{pg}}">{{ pg }}</a></span>
+	  &nbsp;&nbsp;<span class="active"><a href="?page={{pg}}">{{ pg }}</a></span>
 	{%else%}
-	  <span><a href="?page={{pg}}">{{ pg }}</a></span>
+	  &nbsp;&nbsp;<span><a href="?page={{pg}}">{{ pg }}</a></span>
 	{%endif%}
 	{%endfor%}
     {% if article_list.has_next %}
 	<span>
-	  <a href="?page={{article_list.next_page_number}}" aria-label="Next">
+	  &nbsp;&nbsp;<a href="?page={{article_list.next_page_number}}" aria-label="Next">
 	    <span aria-hidden="true">&raquo;</span>
 	  </a>
 	</span>
 	{%else%}
 	<span class="disabled">
-	    <span aria-hidden="true">&raquo;</span>
+	    &nbsp;&nbsp;<span aria-hidden="true">&raquo;</span>
 	  </a>
 	</span>
 	{%endif%}
+	&nbsp;&nbsp;<span><a href="?page={{article_list.paginator.num_pages}}" >末页</a></span>&nbsp;&nbsp;
 	<span class="current">
-        &nbsp;&nbsp;第 {{ article_list.number }} 页/共 {{ article_list.paginator.num_pages }} 页
+        &nbsp;&nbsp;第 <a href="?page={{article_list.number}}">{{ article_list.number }}</a> 页/共 {{ article_list.paginator.num_pages }} 页
     </span>
   </ul>
 </nav>

@@ -32,7 +32,7 @@ class Post(models.Model):
 	brief = models.CharField(max_length=100,default="")
 	type = models.CharField(max_length=100)
 	post_image = models.CharField(max_length=200,null=True)
-	post_time = models.DateTimeField('time_to_post',auto_now=True)
+	post_time = models.DateTimeField('time_to_post',auto_now_add=True)
 	author = models.ForeignKey(User,related_name="author")
 	collection = models.ManyToManyField(User,related_name="collector")
 	heart = models.ManyToManyField(User,related_name="heart_man")
