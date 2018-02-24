@@ -1,0 +1,27 @@
+http://www.jb51.net/article/86525.htm
+'Django中的一个功能： Signals ，Signals是django提供的一个事件通知机制，它可以让你在监听某些自定义或者 预设的事件，当这些事件发生的时候，调用实现定义好的方法。
+比如 django.db.models.signals.pre_save & django.db.models.signals.post_save 表示的是 某个Model调用save方法之前和之后会触发的事件，它和Database提供的触发器在功能上有一点相似。
+
+Django内部包含了一位“信号调度员”：当某事件在框架内发生时，它可以通知到我们的应用程序。 简而言之，当event（事件）发生时，signals（信号）允许若干 senders（寄件人）通知一组 receivers（接收者）。这在我们多个独立的应用代码对同一事件的发生都感兴趣时，特别有用。
+
+个人理解，django的signal可理解为django内部的钩子，当一个事件发生时，其他程序可对其作出相关反应，可通过signal来回调定义好的处理函数（receivers），从而更大程度的解耦我们的系统。
+
+通知类　
+通知是signal最常用的场景之一。例如，在论坛中，在帖子得到回复时，通知楼主。从技术上来讲，我们可以将通知逻辑放在回复保存时，但是这并不是一个好的处理方式，这样会时程序耦合度增大，不利于系统的后期扩展维护。如果我们在回复保存时，只发一个简单的信号，外部的通知逻辑拿到信号后，再发送通知，这样回复的逻辑和通知的逻辑做到了分开，后期维护扩展都比较容易。
+def post_post_save(sender, instance, signal, *args, **kwargs):  
+    post = instance  
+    if post.created == post.updated:  
+        event = Event(user=post.author,event = post)  
+        event.save()  
+  
+dispatcher.connect(post_post_save, signal=signals.post_save, sender=Post)  
+ 
+ 前面说到django在保存一个object的时候会发出一系列signals，在这里我们所监听的是signals.post_save这个signal，这个signal是在django保存完一个对象后发出的，利用dispatcher.connect这个函数来注册监听器，第一个参数是要执行的函数，第二个参数是要监听的signal，第三个参数是指定发送信号的Class，这里指定为Post这个Model，对其他Model所发出的signal并不会执行注册的函数。而我们所定义的需要执行的函数可以将signal所发出的一些参数定义为需要执行的函数的参数，从而在函数里面进行使用，获取更多的信息，这里使用了instance这个参数，即刚刚保存完的Model对象实例。在函数里通过比较日志发布时间和修改时间是否相等来判断是第一次发表还是修改后的保存，并且只为第一次发表这个动作创建一个相应的事件。创建事件的时候看到可以将post这个instance直接赋给generic.GenericForeignKey类型的字段，从而event实例就可以通过它来获取事件的真正信息了，在这里，如果有其他类型的Model实例，当然也可以赋值给generic.GenericForeignKey类型的字段了。
+ 
+现在事件已经保存起来了，如何来得到事件的一个简短描述呢？可以给自己做一个假定，event这个字段所指向的Model都有一个叫做description的方法，那么我们只管调用这个方法就可以得到描述了。至于Post里面的那个description方法，可以根据需要，自己存取post实例的字段来获取信息，包括直接在描述字符串里面包含日志的url等
+
+events = generic.GenericRelation('Event')  
+ 
+通过这个字段可以得到与某篇post相关联的所有事件，最重要的一点是如果没有这个字段，那么当删除一篇post的时候，与该post关联的事件是不会自动删除的。反之有这个字段就会进行自动的级联删除。
+ 
+ 现在有了以上这些，如果你将这些Model定义和signals定义，添加到自己某个app，然后到admin页面添加一篇post试试，添加完后应该会自动多出了一条对应的event记录，修改一个post不会再添加event记录，而删除一篇post会自动删除相应的event记录。

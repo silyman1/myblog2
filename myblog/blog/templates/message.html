@@ -1,0 +1,14 @@
+<div id="msg" class="modal">
+  <form class="modal-content animate" method ="post" action="{%url 'blog:send_message' article.id %}">
+  <div class="imgcontainer">
+  <span onclick="document.getElementById('msg').style.display='none'" class ="close" title="Close Modal">&times;</span>
+  </div>
+  <br>
+  {% csrf_token %}
+  <div class="container">
+	  <p>{{messageform.content}}</p>
+	  <br>
+	  <p style = "text-align:right;"><input type="submit" value="发送"></p>
+	  </div>
+  </form>
+</div>

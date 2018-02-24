@@ -10,25 +10,30 @@
 </header>
 	<p><a href={%url 'blog:get_information' article.author.id %} class="logo"><img src="/static/images/{{article.author.avatar}}" alt="" class="img-circle" /></a></p>
 	<p><a href={%url 'blog:get_information' article.author.id %}>{{article.author.username}}</a></p>
+	<ul class="icons">
+	<li><a href="#" class="fa-envelope" onclick="msg_Send('msg')">&nbsp;私信<span class="label">Email</span></a></li>
+	</ul>
+
 	<div >
 		<span>{{article.post_time}}</span>
 		<span><a href="#">&nbsp;收藏:{{article.collection_num}}</a></span>
 		<span><a href="#" class="icon fa-heart">&nbsp;{{article.heart_num}}</a></span>
 		<span><a href="#" class="icon fa-comment">&nbsp;{{article.comment_num}}</a></span>
 </section>
-<div >
-<span>
+<hr>
+<div style="text-align: center">
+<span >
 		{%if article.img_num == 1%}
 		{%for img in img_list%}
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="image featured" ><img src="/static/images/{{img.image_url}}" alt="" /></a>
 		{%endfor%}
 		{%else%}
 		{%for img in img_list%}
-		<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' height="280" width="280" alt="" /></a><span>
+		<span >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="image featured"><img src='/static/images/{{img.image_url}}' height="280" width="280" alt="" /></a><span>
 
 		{%endfor%}
 		{%endif%}
-		<p>{{article.body}}</p>
+		<p style="text-align: center">{{article.body}}</p>
 </span>
 </div>
 <div id="heart-container" style="text-align: center">
@@ -40,6 +45,7 @@
 	<p style="font-size:30px">取消喜欢</p>
 {%endif%}
 </div>
+<hr>
 <br />
 <div >
 <form action="{%url 'blog:comment' article.id%}" method="post" name ="comment">
@@ -67,12 +73,18 @@
 	{%endfor%}
 	</ul>
 </section>
+{%include 'message.html'%}
 <script>
         $(function () {            
             $(".like").click(function () {
                 $(this).toggleClass('cs');
             })
         })
+function msg_Send(t){
+	if (t == 'msg'){
+		document.getElementById('msg').style.display='block';
+	}
+}
 </script>
 
 

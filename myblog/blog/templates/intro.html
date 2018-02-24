@@ -1,4 +1,5 @@
 <section>
+	<h3>相关推荐：</h3>
 	<div class="mini-posts">
 		{%for article in introduce_list%}
 			<article class="mini-post">
@@ -7,7 +8,11 @@
 					<time class="published" >{{article.post_time}}</time>
 					<a href="#" class="author"><img src="/static/images/{{article.author.avatar}}" alt="" /></a>
 				</header>
-				<a href="#" class="image"><img src="images/pic07.jpg" alt="" /></a>
+				{%for img in introduce_pic_list%}
+				{%if img.article == article%}
+				<a href="#" class="image"><img src="/static/images/{{img.image_url}}" height="280" width="280" alt="" /></a>
+				{%endif%}
+				{%endfor%}
 			</article>
 		{%endfor%}
 	</div>

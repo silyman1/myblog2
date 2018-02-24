@@ -5,8 +5,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
-from .forms import LoginForm,PostForm,EditForm,CommentForm
-from .models import User,Post,Picture,Friendship,Comment
+from .forms import LoginForm,PostForm,EditForm,CommentForm,MessageForm
+from .models import User,Post,Picture,Friendship,Comment,Message
 from PIL import Image
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -90,6 +90,15 @@ def index(request):
 	#article_list = get_object_or_404
 	article_list = Post.objects.order_by('-post_time')
 	introduce_list = Post.objects.order_by('-heart_num')[:4]
+	introduce_pic_list = []
+	for a in Post.objects.order_by('-heart_num'):
+		pics = a.picture_set.all()
+		if not pics:
+			continue
+		pic = random.choice(pics)
+		introduce_pic_list.append(pic)
+		if len(introduce_pic_list) >= 4:
+			break
 	page = request.GET.get('page')
 	print 'page:',page
 	#p = Paginator(article_list, 4)
@@ -122,7 +131,7 @@ def index(request):
 			slide_list.append(slide_item)
 		if len(slide_list)>=4:
 			break
-	return render(request,'index.html',{"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{"introduce_pic_list":introduce_pic_list,"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
 	page = request.GET.get('page')
@@ -474,7 +483,8 @@ def post_detail(request,article_id):
 	comment_list = Comment.objects.filter(article =article)
 	heart_list = request.user.heart_man.all()
 	commentform = CommentForm()
-	return render(request,'post_detail.html',{"article":article,"img_list":img_list,"heart_list":heart_list,'commentform':commentform,"comment_list":comment_list})
+	messageform = MessageForm()
+	return render(request,'post_detail.html',{"messageform":messageform,"article":article,"img_list":img_list,"heart_list":heart_list,'commentform':commentform,"comment_list":comment_list})
 @login_required
 def heart(request,article_id):
 	article = get_object_or_404(Post,pk=article_id)
@@ -538,5 +548,19 @@ def delete_comment(request,comment_id):
 	article.comment_num -=1
 	article.save()
 	return redirect(reverse("blog:post_detail",args=(article.id,)))
+@login_required
+def send_message(request,article_id):
+	article = get_object_or_404(Post,pk=article_id)
+	if request.method == 'POST':
+		messageform = MessageForm(request.POST)
+		if messageform.is_valid():
+			message = Message()
+			message.content =messageform.cleaned_data['content']
+			message.sender = request.user
+			message.receiver = article.author
+			message.save()
+			return redirect(reverse('blog:post_detail',args=(article_id,)))
+	else:
+		return HttpResponse("私信失败")
 def submit_post(request):
 	pass

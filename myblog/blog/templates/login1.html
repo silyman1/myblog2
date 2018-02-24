@@ -50,6 +50,7 @@
 // 获取模型
 var modal = document.getElementById('register');
 var modal2 = document.getElementById('login');
+var modal3 = document.getElementById('msg');
 // 鼠标点击模型外区域关闭登录框
 window.onclick = function(event) {
     if (event.target == modal ) {
@@ -57,6 +58,9 @@ window.onclick = function(event) {
     }
 	else if(event.target == modal2){
 		modal2.style.display = "none";
+	}
+	else{
+	modal3.style.display = "none";
 	}
 }
 </script>

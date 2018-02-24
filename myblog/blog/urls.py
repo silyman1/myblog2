@@ -29,6 +29,7 @@ urlpatterns = [
 	url(r'^article/(?P<article_id>[0-9]+)/comment/$', views.comment, name='comment'),
 	url(r'^article/(?P<article_id>[0-9]+)/delete$', views.delete, name='delete'),
 	url(r'^comment/(?P<comment_id>[0-9]+)/delete$', views.delete_comment, name='delete_comment'),
+	url(r'^send_message/(?P<article_id>[0-9]+)/$', views.send_message, name='send_message'),
     #url(r'^login/$', views.login_view name='login') ,
     #url(r'^logout/$', views.logout_view name='logout'),
 ]
