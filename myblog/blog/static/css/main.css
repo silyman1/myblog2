@@ -3496,3 +3496,15 @@ text-decoration: none;
     -webkit-box-orient: vertical;
     word-break: break-all;
 }
+.dd {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
+.sender img {
+	border-radius: 100%;
+	display: block;
+	width: 3.2em;
+}

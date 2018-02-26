@@ -1,0 +1,29 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+{%if message_list%}
+<h1>私信：</h1>
+<div class ="message-container">
+{%for message in message_list%}
+<article class="post">
+<footer>
+  <span>
+    <a href={%url 'blog:get_information' message.sender.id %} class="sender">
+	<span class="name">
+	  <img src="/static/images/{{message.sender.avatar}}"width="30" class="img-circle">
+	</span>
+	</a>
+	<span class="dd">
+	<span>{{message.sender.username}}</span>
+	<span>:&nbsp;&nbsp;&nbsp;<a href={%url 'blog:get_information' message.sender.id %} >{{message.content}}</a></span>
+	</span>
+  </span>
+</footer>
+</article>
+{%endfor%}
+{%else%}
+<h2>暂无消息</h2>
+{%endif%}
+</div>
+{%endblock%}

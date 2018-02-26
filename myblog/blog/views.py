@@ -562,5 +562,10 @@ def send_message(request,article_id):
 			return redirect(reverse('blog:post_detail',args=(article_id,)))
 	else:
 		return HttpResponse("私信失败")
+@login_required
+def messages(request,user_id):
+	message_list = request.user.receiver.all()
+	print message_list
+	return render(request,'my_message.html',{"message_list":message_list,})
 def submit_post(request):
 	pass

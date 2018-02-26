@@ -1,5 +1,7 @@
+<br />
+{%if introduce_list%}
 <section>
-	<h3>相关推荐：</h3>
+	<h2>相关推荐：</h2>
 	<div class="mini-posts">
 		{%for article in introduce_list%}
 			<article class="mini-post">
@@ -17,3 +19,4 @@
 		{%endfor%}
 	</div>
 </section>
+{%endif%}

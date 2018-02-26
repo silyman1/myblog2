@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.db.models import signals  
 from django.dispatch import dispatcher   
+from django.shortcuts import get_object_or_404
 # Create your models here.
 
 class User(AbstractUser,models.Model):
@@ -67,7 +68,7 @@ class Comment(models.Model):
 	timestamp = models.DateTimeField('time_to_comment',auto_now_add=True)
 class Message(models.Model):
 	#user_id = models.IntegerField(db_index=True)
-	#has_readed = models.BooleanField(default=False)
+	has_readed = models.BooleanField(default=False)
 	content = models.CharField(max_length=100,null=True)
 	sender = models.ForeignKey(User,related_name="sender")
 	receiver = models.ManyToManyField(User,related_name="receiver")
@@ -76,12 +77,22 @@ class Message(models.Model):
 # receiver
 def my_callback(sender, **kwargs):
 	message =Message()
-	message.content = u'%s发表了新的博客' % sender.author
-	user = get_object_or_404(User,pk = 1)
-	message.sender = user
-	message.receiver.add(request.user)
-	message.save()
-	print u"信号触发，，，!"
+	print 'sender:',sender
+	print kwargs
+	if "instance" in kwargs:  
+		obj = kwargs.get("instance")  
+		message.content = u'您关注的 %s 发表了新的博客 《%s》 ' % (obj.author.username,obj.title)
+		print message.content
+		user = get_object_or_404(User,pk = 1)
+		message.sender = user
+		message.save()
+		user_list = user.get_followed()
+		for u in user_list:
+			message.receiver.add(u)
+		message.save()
+		print u"信号触发，，，!"
+	else:
+		print 'failed'
   
 # connect
 post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
