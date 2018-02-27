@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.views.decorators.csrf import csrf_exempt
 from .forms import LoginForm,PostForm,EditForm,CommentForm,MessageForm
-from .models import User,Post,Picture,Friendship,Comment,Message
+from .models import User,Post,Picture,Friendship,Comment,Message,UserMessagesCount
 from PIL import Image
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -131,11 +131,15 @@ def index(request):
 			slide_list.append(slide_item)
 		if len(slide_list)>=4:
 			break
-	return render(request,'index.html',{"introduce_pic_list":introduce_pic_list,"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
+	return render(request,'index.html',{'u_count':u_count,"introduce_pic_list":introduce_pic_list,"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -154,12 +158,14 @@ def travel(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{"u_count":u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 
 def foods(request):
 	article_list = Post.objects.filter(type=1).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -178,11 +184,13 @@ def foods(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{'u_count':u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def movies(request):
 	article_list = Post.objects.filter(type=3).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -201,11 +209,13 @@ def movies(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{'u_count':u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def reading(request):
 	article_list = Post.objects.filter(type=2).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -224,11 +234,13 @@ def reading(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{'u_count':u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def notes(request):
 	article_list = Post.objects.filter(type=4).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -247,12 +259,14 @@ def notes(request):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{'u_count':u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 @login_required
 def home(request,user_id):
 	article_list = Post.objects.filter(author=request.user).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -267,10 +281,12 @@ def home(request,user_id):
 	img_list = Picture.objects.all()
 	mycollections_list = request.user.collector.all()
 	print article_list
-	return render(request,'index.html',{"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
+	return render(request,'index.html',{'u_count':u_count,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 @csrf_exempt
 @login_required
 def blog_post(request,user_id):
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	if request.method == 'POST':
 		print '*****************'
 		for key in request.POST:
@@ -320,12 +336,14 @@ def blog_post(request,user_id):
 	else:
 		print '*****************'
 		postform =PostForm()
-		return render(request,'write_post.html',{"postform":postform})
+		return render(request,'write_post.html',{"u_count":u_count,"postform":postform})
 def get_information(request,user_id):
 	user = get_object_or_404(User,pk= user_id)
 	article_list = Post.objects.filter(author=user).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -356,6 +374,7 @@ def get_information(request,user_id):
 											"article_list":article_list,
 											"img_list":img_list,
 											"title":title,
+											"u_count":u_count,
 											"mycollections_list":mycollections_list,
 											"followers_list":followers_list,
 											"followed_list":followed_list,
@@ -365,6 +384,8 @@ def get_information(request,user_id):
 @csrf_exempt
 @login_required
 def edit(request,user_id):
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	if request.method == 'POST':
 		editform =EditForm(request.POST)
 		if editform.is_valid():
@@ -397,7 +418,7 @@ def edit(request,user_id):
 	else:
 		data = {'username':request.user.username,'email':request.user.email,'mysignature':request.user.mysignature}
 		editform =EditForm(initial =data)
-		return render(request,'edit.html',{"editform":editform})
+		return render(request,'edit.html',{"u_count":u_count,"editform":editform})
 @login_required
 def follow(request,user_id):
 	flag = set_follower(request.user,user_id)
@@ -449,6 +470,8 @@ def collections(request,user_id):
 	article_list = request.user.collector.all().order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -463,19 +486,23 @@ def collections(request,user_id):
 	img_list = []
 	for article in article_list:
 		img_list += Picture.objects.filter(article=article)
-	return render(request,'collection_or_heart.html',{"article_list":article_list,"img_list":img_list})
+	return render(request,'collection_or_heart.html',{"u_count":u_count,"article_list":article_list,"img_list":img_list})
 @login_required
 def myfollowing(request ,user_id):
 	my_followers_list=request.user.get_followers()
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	print my_followers_list
-	return render(request,'following.html',{"my_followers_list":my_followers_list})
+	return render(request,'following.html',{"u_count":u_count,"my_followers_list":my_followers_list})
 @login_required
 def myfollowers(request,user_id):
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	my_followers_list=request.user.get_followers()
 	print my_followers_list
 	my_followed_list = request.user.get_followed()
 	print my_followed_list
-	return render(request,'followers.html',{"my_followers_list":my_followers_list,"my_followed_list":my_followed_list})
+	return render(request,'followers.html',{"u_count":u_count,"my_followers_list":my_followers_list,"my_followed_list":my_followed_list})
 @csrf_exempt
 def post_detail(request,article_id):
 	article = get_object_or_404(Post,pk=article_id)
@@ -484,7 +511,9 @@ def post_detail(request,article_id):
 	heart_list = request.user.heart_man.all()
 	commentform = CommentForm()
 	messageform = MessageForm()
-	return render(request,'post_detail.html',{"messageform":messageform,"article":article,"img_list":img_list,"heart_list":heart_list,'commentform':commentform,"comment_list":comment_list})
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
+	return render(request,'post_detail.html',{"u_count":u_count,"messageform":messageform,"article":article,"img_list":img_list,"heart_list":heart_list,'commentform':commentform,"comment_list":comment_list})
 @login_required
 def heart(request,article_id):
 	article = get_object_or_404(Post,pk=article_id)
@@ -504,6 +533,8 @@ def hearts(request,user_id):
 	article_list = request.user.heart_man.all().order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -518,7 +549,7 @@ def hearts(request,user_id):
 	img_list = []
 	for article in article_list:
 		img_list += Picture.objects.filter(article=article)
-	return render(request,'collection_or_heart.html',{"article_list":article_list,"img_list":img_list})
+	return render(request,'collection_or_heart.html',{"u_count":u_count,"article_list":article_list,"img_list":img_list})
 @csrf_exempt
 def comment(request,article_id):
 	article = get_object_or_404(Post,pk=article_id)
@@ -564,8 +595,33 @@ def send_message(request,article_id):
 		return HttpResponse("私信失败")
 @login_required
 def messages(request,user_id):
-	message_list = request.user.receiver.all()
+	message_list = request.user.receiver.all().order_by('-timestamp')
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
 	print message_list
-	return render(request,'my_message.html',{"message_list":message_list,})
+	return render(request,'my_message.html',{"u_count":u_count,"message_list":message_list,})
+@login_required
+def message_detail(request,message_id):
+	message = get_object_or_404(Message,pk=message_id)
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
+	if not message.has_readed :
+		u_count.unread_count -= 1
+		u_count.save()
+		print "message unread_count-1"
+		message.has_readed = True
+		message.save()
+	return render(request,'message_detail.html',{"u_count":u_count,"message":message,})
+@login_required
+def message_read(request,message_id):
+	message = get_object_or_404(Message,pk=message_id)
+	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
+	u_count = u_count[0]
+	if not message.has_readed :
+		u_count.unread_count -= 1
+		u_count.save()
+		message.has_readed = True
+		message.save()
+	return redirect(reverse('blog:messages',args=(request.user.id,)))
 def submit_post(request):
 	pass

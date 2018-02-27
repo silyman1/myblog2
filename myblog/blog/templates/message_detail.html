@@ -1,0 +1,25 @@
+{%extends "base.html"%}
+{% load staticfiles %}
+
+{%block content%}
+<div class ="message-container">
+<h1>
+<a href={%url 'blog:get_information' message.sender.id %} >
+<span class="name"><img src="/static/images/{{message.sender.avatar}}"width="30" class="img-circle"></span>
+
+{{message.sender.username}}</a>的私信：</h1>
+<article class="post">
+<footer>
+  <span>
+ 
+	{%if message.post_id%}
+	<span><a href={%url 'blog:post_detail' message.post_id %} >{{message.content}}</a></span>
+	{%else%}
+	<span>{{message.content}}</span>
+	{%endif%}
+	</span>
+  </span>
+</footer>
+</article>
+</div>
+{%endblock%}

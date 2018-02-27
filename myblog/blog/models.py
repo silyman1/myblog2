@@ -73,7 +73,15 @@ class Message(models.Model):
 	sender = models.ForeignKey(User,related_name="sender")
 	receiver = models.ManyToManyField(User,related_name="receiver")
 	timestamp = models.DateTimeField('time_to_send',auto_now_add=True)
-
+	post_id = models.IntegerField(null=True)
+	
+class UserMessagesCount(models.Model):
+	user_id = models.IntegerField(primary_key=True)
+	unread_count = models.IntegerField(default=0)
+	total_count = models.IntegerField(default=0)
+	
+	def __str__(self):
+		return '<UserMessagesCount %s: %s>' % (self.user_id, self.unread_count)
 # receiver
 def my_callback(sender, **kwargs):
 	message =Message()
@@ -85,10 +93,21 @@ def my_callback(sender, **kwargs):
 		print message.content
 		user = get_object_or_404(User,pk = 1)
 		message.sender = user
+		message.post_id = obj.id
 		message.save()
 		user_list = user.get_followed()
 		for u in user_list:
 			message.receiver.add(u)
+			u_count = UserMessagesCount.objects.filter(pk=u.id)
+			u_count=u_count[0]
+			if not u_count:
+				userMessagesCount = UserMessagesCount()
+				userMessagesCount.user_id = u.id
+				userMessagesCount.save()
+				u_count = userMessagesCount
+			u_count.unread_count += 1
+			u_count.total_count += 1
+			u_count.save()
 		message.save()
 		print u"信号触发，，，!"
 	else:
@@ -96,7 +115,6 @@ def my_callback(sender, **kwargs):
   
 # connect
 post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
-
 '''
 class Event(models.Model):  
 	user = models.ForeignKey(User)  

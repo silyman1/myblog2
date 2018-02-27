@@ -84,7 +84,11 @@
 								</li>
 								<li>
 									<a href={%url 'blog:messages' request.user.id%} style="font-size:20px;cursor:pointer">
-										<h3>我的消息</h3>
+									{%if u_count%}
+										<h3>我的消息({{u_count.total_count}})&nbsp;&lt;未读消息({{u_count.unread_count}})&gt;</h3>
+									{%else%}
+									<h3>我的消息</h3>
+									{%endif%}
 									</a>
 								</li>
 								<li>

@@ -3503,6 +3503,13 @@ text-decoration: none;
     -webkit-box-orient: vertical;
     word-break: break-all;
 }
+.ff {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+}
 .sender img {
 	border-radius: 100%;
 	display: block;
