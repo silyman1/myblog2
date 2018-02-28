@@ -6,8 +6,7 @@ from django.db.models import Count
 from django.db.models.signals import post_save,post_delete
 from django.contrib.contenttypes.models import ContentType  
 from django.contrib.contenttypes import generic
-from django.db.models import signals  
-from django.dispatch import dispatcher   
+
 from django.shortcuts import get_object_or_404
 # Create your models here.
 
@@ -82,39 +81,7 @@ class UserMessagesCount(models.Model):
 	
 	def __str__(self):
 		return '<UserMessagesCount %s: %s>' % (self.user_id, self.unread_count)
-# receiver
-def my_callback(sender, **kwargs):
-	message =Message()
-	print 'sender:',sender
-	print kwargs
-	if "instance" in kwargs:  
-		obj = kwargs.get("instance")  
-		message.content = u'您关注的 %s 发表了新的博客 《%s》 ' % (obj.author.username,obj.title)
-		print message.content
-		user = get_object_or_404(User,pk = 1)
-		message.sender = user
-		message.post_id = obj.id
-		message.save()
-		user_list = user.get_followed()
-		for u in user_list:
-			message.receiver.add(u)
-			u_count = UserMessagesCount.objects.filter(pk=u.id)
-			u_count=u_count[0]
-			if not u_count:
-				userMessagesCount = UserMessagesCount()
-				userMessagesCount.user_id = u.id
-				userMessagesCount.save()
-				u_count = userMessagesCount
-			u_count.unread_count += 1
-			u_count.total_count += 1
-			u_count.save()
-		message.save()
-		print u"信号触发，，，!"
-	else:
-		print 'failed'
-  
-# connect
-post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
+
 '''
 class Event(models.Model):  
 	user = models.ForeignKey(User)  

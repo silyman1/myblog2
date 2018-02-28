@@ -1,6 +1,6 @@
 from django.conf.urls import include, url
 from django.contrib import admin
-from blog.views import login_view,logout_view
+from blog.views import login_view,logout_view,echo
 urlpatterns = [
     # Examples:
     # url(r'^$', 'myblog.views.home', name='home'),
@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^accounts/login/$', login_view),
     url(r'^accounts/logout/$', logout_view),
     url(r'^search/$', include('haystack.urls')),
+    url(r'^echo$', echo),
 ]

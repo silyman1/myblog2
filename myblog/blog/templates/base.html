@@ -17,7 +17,7 @@
 		<script src="{% static 'js\util.js' %}"></script>
 		<script src="{% static 'js\main.js' %}"></script>
 	</head>
-	<body>
+	<body >
 		<!-- Wrapper -->
 		<div id="wrapper">
 
@@ -127,6 +127,12 @@
 		{%if not request.user.is_authenticated%}
 		{%include 'login1.html'%}
 		{%endif%}
+<br>
+
+<h1>Received Messages</h1>
+<div id="messagecontainer">
+
+</div>
 {%block content%}{%endblock%}
 <script>
 function login_Or_reg(t){
@@ -143,6 +149,32 @@ function openNav() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("write").style.height = "100%";
 }
+$(function () {
+        $(document).ready(function () {
+            if (window.s) {
+                window.s.close()
+            }
+            /*创建socket连接*/
+            var socket = new WebSocket("ws://" + window.location.host + "/echo");
+            socket.onopen = function () {
+                console.log('WebSocket open');//成功连接上Websocket
+            };
+            socket.onmessage = function (e) {
+                console.log('message: ' + e.data);//打印出服务端返回过来的数据
+                $('#messagecontainer').prepend('<div id="snackbar">' + e.data + '</div>');
+				var x = document.getElementById("snackbar")
+				x.className = "show";
+				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            };
+            // Call onopen directly if socket is already open
+            if (socket.readyState == WebSocket.OPEN) socket.onopen();
+            window.s = socket;
+			socket.addEventListener('open', function () {
+				socket.send('你666');
+			});
+		});
+    });
+
 </script>
 	</body>
 </html>

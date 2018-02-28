@@ -11,6 +11,10 @@ from PIL import Image
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import random
+from dwebsocket.decorators import accept_websocket,require_websocket
+from django.db.models.signals import post_save,post_delete
+from django.db.models import signals  
+from django.dispatch import dispatcher   
 class CustemPaginator(Paginator):
 	def __init__(self, current_page, max_pager_num, *args, **kwargs):
 		# 当前页
@@ -651,5 +655,50 @@ def message_read(request,message_id):
 		message.has_readed = True
 		message.save()
 	return redirect(reverse('blog:messages',args=(request.user.id,)))
+@accept_websocket
+def echo(request):
+	if not request.is_websocket():#判断是不是websocket连接
+		try:#如果是普通的http方法
+			message = request.GET['message']
+			return HttpResponse(message)
+		except:
+			return render(request,'index.html')
+	else:
+		print request.websocket
+		for message in request.websocket:
+			request.websocket.send('有一条新的消息')#发送消息到客户端
+# receiver
+def my_callback(sender, **kwargs):
+	message =Message()
+	print 'sender:',sender
+	print kwargs
+	if "instance" in kwargs:  
+		obj = kwargs.get("instance")  
+		message.content = u'您关注的 %s 发表了新的博客 《%s》 ' % (obj.author.username,obj.title)
+		print message.content
+		user = get_object_or_404(User,pk = 1)
+		message.sender = user
+		message.post_id = obj.id
+		message.save()
+		user_list = user.get_followed()
+		for u in user_list:
+			message.receiver.add(u)
+			u_count = UserMessagesCount.objects.filter(pk=u.id)
+			u_count=u_count[0]
+			if not u_count:
+				userMessagesCount = UserMessagesCount()
+				userMessagesCount.user_id = u.id
+				userMessagesCount.save()
+				u_count = userMessagesCount
+			u_count.unread_count += 1
+			u_count.total_count += 1
+			u_count.save()
+		message.save()
+		print u"信号触发，，，!"
+	else:
+		print 'failed'
+  
+# connect
+post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
 def submit_post(request):
 	pass
