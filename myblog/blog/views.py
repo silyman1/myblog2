@@ -132,14 +132,16 @@ def index(request):
 		if len(slide_list)>=4:
 			break
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	return render(request,'index.html',{'u_count':u_count,"introduce_pic_list":introduce_pic_list,"introduce_list":introduce_list,'slide_list':slide_list,"article_list":article_list,"img_list":img_list,"mycollections_list":mycollections_list})
 def travel(request):
 	article_list = Post.objects.filter(type=0).order_by('-post_time')
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -165,7 +167,8 @@ def foods(request):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -190,7 +193,8 @@ def movies(request):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -215,7 +219,8 @@ def reading(request):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -240,7 +245,8 @@ def notes(request):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -266,7 +272,8 @@ def home(request,user_id):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -286,7 +293,8 @@ def home(request,user_id):
 @login_required
 def blog_post(request,user_id):
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	if request.method == 'POST':
 		print '*****************'
 		for key in request.POST:
@@ -343,7 +351,8 @@ def get_information(request,user_id):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -385,7 +394,8 @@ def get_information(request,user_id):
 @login_required
 def edit(request,user_id):
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	if request.method == 'POST':
 		editform =EditForm(request.POST)
 		if editform.is_valid():
@@ -471,7 +481,8 @@ def collections(request,user_id):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -491,13 +502,15 @@ def collections(request,user_id):
 def myfollowing(request ,user_id):
 	my_followers_list=request.user.get_followers()
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	print my_followers_list
 	return render(request,'following.html',{"u_count":u_count,"my_followers_list":my_followers_list})
 @login_required
 def myfollowers(request,user_id):
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	my_followers_list=request.user.get_followers()
 	print my_followers_list
 	my_followed_list = request.user.get_followed()
@@ -512,7 +525,8 @@ def post_detail(request,article_id):
 	commentform = CommentForm()
 	messageform = MessageForm()
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	return render(request,'post_detail.html',{"u_count":u_count,"messageform":messageform,"article":article,"img_list":img_list,"heart_list":heart_list,'commentform':commentform,"comment_list":comment_list})
 @login_required
 def heart(request,article_id):
@@ -534,7 +548,8 @@ def hearts(request,user_id):
 	page = request.GET.get('page')
 	print 'page:',page
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	#p = Paginator(article_list, 4)
 	try:
 		p = CustemPaginator(page,4,article_list, 4)
@@ -588,8 +603,20 @@ def send_message(request,article_id):
 			message = Message()
 			message.content =messageform.cleaned_data['content']
 			message.sender = request.user
-			message.receiver = article.author
 			message.save()
+			message.receiver.add(article.author)
+			message.save()
+			u_count = UserMessagesCount.objects.filter(pk=article.author.id)
+			if not u_count:
+				userMessagesCount = UserMessagesCount()
+				userMessagesCount.user_id = article.author.id
+				userMessagesCount.save()
+				u_count = userMessagesCount
+			else:
+				u_count=u_count[0]
+			u_count.unread_count += 1
+			u_count.total_count += 1
+			u_count.save()
 			return redirect(reverse('blog:post_detail',args=(article_id,)))
 	else:
 		return HttpResponse("私信失败")
@@ -597,7 +624,8 @@ def send_message(request,article_id):
 def messages(request,user_id):
 	message_list = request.user.receiver.all().order_by('-timestamp')
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
-	u_count = u_count[0]
+	if u_count:
+		u_count = u_count[0]
 	print message_list
 	return render(request,'my_message.html',{"u_count":u_count,"message_list":message_list,})
 @login_required

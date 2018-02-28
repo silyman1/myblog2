@@ -2,8 +2,8 @@
 {% load staticfiles %}
 
 {%block content%}
+<h1>私信{%if u_count%}({{u_count.unread_count}}{%else%}(0{%endif%}条未读)：</h1>
 {%if message_list%}
-<h1>私信({{u_count.unread_count}}条未读)：</h1>
 <div class ="message-container">
 {%for message in message_list%}
 <article class="post">
