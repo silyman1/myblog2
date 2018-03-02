@@ -33,6 +33,7 @@ urlpatterns = [
 	url(r'^author/(?P<user_id>[0-9]+)/messages/$', views.messages, name='messages'),
 	url(r'^message/(?P<message_id>[0-9]+)/detail/$', views.message_detail, name='message_detail'),
 	url(r'^message/(?P<message_id>[0-9]+)/readed/$', views.message_read, name='message_read'),
+	url(r'^send2_message/(?P<user_id>[0-9]+)/$', views.send2_message, name='send2_message'),
     #url(r'^login/$', views.login_view name='login') ,
     #url(r'^logout/$', views.logout_view name='logout'),
 ]

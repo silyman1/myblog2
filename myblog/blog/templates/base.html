@@ -85,9 +85,9 @@
 								<li>
 									<a href={%url 'blog:messages' request.user.id%} style="font-size:20px;cursor:pointer">
 									{%if u_count%}
-										<h3>我的消息({{u_count.total_count}})&nbsp;&lt;未读消息({{u_count.unread_count}})&gt;</h3>
+										<h3>我的消息(<span id="ur">{{u_count.total_count}}</span>)&nbsp;&lt;未读消息({{u_count.unread_count}})&gt;</h3>
 									{%else%}
-									<h3>我的消息(0)&nbsp;&lt;未读消息(0)&gt;</h3>
+									<h3>我的消息(<span id="ur">0</span>)&nbsp;&lt;未读消息(0)&gt;</h3>
 									{%endif%}
 									</a>
 								</li>
@@ -128,12 +128,30 @@
 		{%include 'login1.html'%}
 		{%endif%}
 <br>
-
-<h1>Received Messages</h1>
 <div id="messagecontainer">
 
 </div>
 {%block content%}{%endblock%}
+<script>
+    $(document).ready(function(){
+	  setInterval(notice,8000);
+      function notice(){
+        var u_id = {{request.user.id}};
+        var t_count = $("#ur").text();
+        $.get("/ajax/add/",{'u_id':u_id,'t_count':t_count}, function(ret){
+			if (ret.result){
+			var reg=/0/g;
+			 n ='<div id="snackbar"><a href={%url "blog:message_detail" 0 %} >' + ret.result + '</a></div>'.replace(reg,'2');
+			$('#messagecontainer').prepend(n);
+				var x = document.getElementById("snackbar");
+				x.className = "show";
+				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+				$("#ur").html(ret.num)
+				}
+        })
+      };
+    });
+</script>
 <script>
 function login_Or_reg(t){
 	if (t == 'login'){
@@ -149,31 +167,6 @@ function openNav() {
     document.getElementById("menu").style.display = "none";
     document.getElementById("write").style.height = "100%";
 }
-$(function () {
-        $(document).ready(function () {
-            if (window.s) {
-                window.s.close()
-            }
-            /*创建socket连接*/
-            var socket = new WebSocket("ws://" + window.location.host + "/echo");
-            socket.onopen = function () {
-                console.log('WebSocket open');//成功连接上Websocket
-            };
-            socket.onmessage = function (e) {
-                console.log('message: ' + e.data);//打印出服务端返回过来的数据
-                $('#messagecontainer').prepend('<div id="snackbar">' + e.data + '</div>');
-				var x = document.getElementById("snackbar")
-				x.className = "show";
-				setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-            };
-            // Call onopen directly if socket is already open
-            if (socket.readyState == WebSocket.OPEN) socket.onopen();
-            window.s = socket;
-			socket.addEventListener('open', function () {
-				socket.send('你666');
-			});
-		});
-    });
 
 </script>
 	</body>

@@ -15,6 +15,8 @@ from dwebsocket.decorators import accept_websocket,require_websocket
 from django.db.models.signals import post_save,post_delete
 from django.db.models import signals  
 from django.dispatch import dispatcher   
+from django.dispatch import receiver
+import json
 class CustemPaginator(Paginator):
 	def __init__(self, current_page, max_pager_num, *args, **kwargs):
 		# 当前页
@@ -383,7 +385,9 @@ def get_information(request,user_id):
 		mycollections_list = request.user.collector.all()
 	else:
 		mycollections_list = []
+	messageform = MessageForm()
 	return render(request,'information.html',{"user":user,
+											"messageform":messageform,
 											"article_list":article_list,
 											"img_list":img_list,
 											"title":title,
@@ -625,6 +629,32 @@ def send_message(request,article_id):
 	else:
 		return HttpResponse("私信失败")
 @login_required
+def send2_message(request,user_id):
+	user = get_object_or_404(User,pk=user_id)
+	if request.method == 'POST':
+		messageform = MessageForm(request.POST)
+		if messageform.is_valid():
+			message = Message()
+			message.content =messageform.cleaned_data['content']
+			message.sender = request.user
+			message.save()
+			message.receiver.add(user)
+			message.save()
+			u_count = UserMessagesCount.objects.filter(pk=user_id)
+			if not u_count:
+				userMessagesCount = UserMessagesCount()
+				userMessagesCount.user_id = user_id
+				userMessagesCount.save()
+				u_count = userMessagesCount
+			else:
+				u_count=u_count[0]
+			u_count.unread_count += 1
+			u_count.total_count += 1
+			u_count.save()
+			return redirect(reverse('blog:get_information',args=(user_id,)))
+	else:
+		return HttpResponse("私信失败")
+@login_required
 def messages(request,user_id):
 	message_list = request.user.receiver.all().order_by('-timestamp')
 	u_count = UserMessagesCount.objects.filter(pk=request.user.id)
@@ -656,7 +686,7 @@ def message_read(request,message_id):
 		message.save()
 	return redirect(reverse('blog:messages',args=(request.user.id,)))
 @accept_websocket
-def echo(request):
+def echo(request,**kwargs):
 	if not request.is_websocket():#判断是不是websocket连接
 		try:#如果是普通的http方法
 			message = request.GET['message']
@@ -665,9 +695,10 @@ def echo(request):
 			return render(request,'index.html')
 	else:
 		print request.websocket
-		for message in request.websocket:
-			request.websocket.send('有一条新的消息')#发送消息到客户端
+		#for message in request.websocket:
+		request.websocket.send('有一条新的消息')#发送消息到客户端
 # receiver
+@receiver(post_save,sender=Post)
 def my_callback(sender, **kwargs):
 	message =Message()
 	print 'sender:',sender
@@ -699,6 +730,22 @@ def my_callback(sender, **kwargs):
 		print 'failed'
   
 # connect
-post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
+#post_save.connect(my_callback, sender=Post, weak=True, dispatch_uid=None)
+def ajax_test_add(request):
+	a = int(request.GET.get('u_id'))
+	b = int(request.GET.get('t_count'))
+	u_count = UserMessagesCount.objects.filter(user_id=a)
+	num=u_count[0].total_count
+	if num != b:
+		new_message = request.user.receiver.all().order_by('-timestamp')[0]
+		m_id = new_message.id
+		if new_message.sender.username == 'admin':
+			new_message = new_message.content
+		else:
+			new_message = "您收到一条新的消息"
+		return_json = {'result':new_message,'num':num,'m_id':m_id}
+	else:
+		return_json = {'result':None}
+	return HttpResponse(json.dumps(return_json), content_type='application/json')
 def submit_post(request):
 	pass

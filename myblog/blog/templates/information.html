@@ -32,6 +32,9 @@
 			  </span>
 			</p>
 			{%endif%}
+			<ul class="icons">
+	<li>&nbsp;&nbsp;&nbsp;<a href="#" class="fa-envelope" onclick="msg_Send('msg')">私信ta<span class="label">Email</span></a></li>
+	</ul>
 		</td>
 		<td>
 			{%if request.user.id == user.id%}
@@ -93,6 +96,7 @@
 </p>
 {%endfor%}
 </div>
+{%include 'message2.html' %}
 <script>  
 	$(function (){	
 		setSlip();	
@@ -148,6 +152,11 @@ else{
 	document.getElementById('followings').style.display='block';
 	document.getElementById('o1').className = 'active';
 }
+}
+function msg_Send(t){
+	if (t == 'msg'){
+		document.getElementById('msg').style.display='block';
+	}
 }
 </script>  
 </div>

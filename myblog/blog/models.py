@@ -6,9 +6,7 @@ from django.db.models import Count
 from django.db.models.signals import post_save,post_delete
 from django.contrib.contenttypes.models import ContentType  
 from django.contrib.contenttypes import generic
-
-from django.shortcuts import get_object_or_404
-# Create your models here.
+# Create your models here.04
 
 class User(AbstractUser,models.Model):
 	user_register_time = models.DateTimeField('date to register',auto_now_add=True)
