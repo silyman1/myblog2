@@ -118,7 +118,7 @@
 					<!-- Actions -->
 						<section>
 							<ul class="actions vertical">
-								<li><a href="/accounts/logout/" class="button big fit" style="font-size:15px;cursor:pointer">退出登录</a></li>
+								<li><a href="/accounts/logout/" style="font-size:15px;cursor:pointer" ><input type="submit" class="button big fit" value ="退出登录"></a></li>
 							</ul>
 						</section>
 				</section>
@@ -141,7 +141,8 @@
         $.get("/ajax/add/",{'u_id':u_id,'t_count':t_count}, function(ret){
 			if (ret.result){
 			var reg=/0/g;
-			 n ='<div id="snackbar"><a href={%url "blog:message_detail" 0 %} >' + ret.result + '</a></div>'.replace(reg,'2');
+			 n ='<div id="snackbar"><a href={%url "blog:message_detail" 0 %} >' + ret.result + '</a></div>'
+			 n = n.replace('0',ret.m_id);
 			$('#messagecontainer').prepend(n);
 				var x = document.getElementById("snackbar");
 				x.className = "show";

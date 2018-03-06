@@ -1788,7 +1788,7 @@
 		.button.fit {
 			display: block;
 			margin: 0 0 1em 0;
-			width: 100%;
+			width: 80%;
 		}
 
 		input[type="submit"].big,

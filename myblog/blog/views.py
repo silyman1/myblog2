@@ -740,9 +740,9 @@ def ajax_test_add(request):
 		new_message = request.user.receiver.all().order_by('-timestamp')[0]
 		m_id = new_message.id
 		if new_message.sender.username == 'admin':
-			new_message = new_message.content
+			new_message = new_message.sender.username + ':' +new_message.content
 		else:
-			new_message = "您收到一条新的消息"
+			new_message = "您收到一条来自%s新的消息" % new_message.sender.username
 		return_json = {'result':new_message,'num':num,'m_id':m_id}
 	else:
 		return_json = {'result':None}
