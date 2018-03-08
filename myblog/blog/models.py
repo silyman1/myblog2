@@ -49,7 +49,7 @@ class Post(models.Model):
 	def description(self):  
 		return u'%s 发表了博客《%s》' % (self.author, self.title)  
 class Picture(models.Model):
-	image_url = models.CharField(max_length=200)
+	image_url = models.CharField(max_length=300)
 	article = models.ForeignKey(Post)
 	type = models.CharField(max_length=100,default="1")
 	
@@ -61,12 +61,12 @@ class Friendship(models.Model):
 class Comment(models.Model):
 	commentor = models.ForeignKey(User,on_delete=models.CASCADE)
 	article = models.ForeignKey(Post,on_delete=models.CASCADE)
-	content = models.CharField(max_length=100,default="")
+	content = models.CharField(max_length=300,default="")
 	timestamp = models.DateTimeField('time_to_comment',auto_now_add=True)
 class Message(models.Model):
 	#user_id = models.IntegerField(db_index=True)
 	has_readed = models.BooleanField(default=False)
-	content = models.CharField(max_length=100,null=True)
+	content = models.CharField(max_length=500,null=True)
 	sender = models.ForeignKey(User,related_name="sender")
 	receiver = models.ManyToManyField(User,related_name="receiver")
 	timestamp = models.DateTimeField('time_to_send',auto_now_add=True)

@@ -7,13 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0005_post_heart'),
+        ('blog', '0002_auto_20180308_1605'),
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='post',
-            name='heart_num',
-            field=models.PositiveIntegerField(default=0),
+        migrations.AlterField(
+            model_name='message',
+            name='content',
+            field=models.CharField(max_length=500, null=True),
         ),
     ]

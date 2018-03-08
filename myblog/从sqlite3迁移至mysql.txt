@@ -1,0 +1,63 @@
+https://www.cnblogs.com/aguncn/p/4744990.html
+
+整合了两个URL而来。。
+
+1，http://www.phodal.com/blog/django-mezzanine-sqlite3-migrate-mysql/
+
+2，http://www.ziqiangxuetang.com/django/django-data-migration.html
+
+A.先建立一个SLAVE数据库
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "dev.db",
+        "USER": "",
+        "PASSWORD": "",
+        "HOST": "",
+        "PORT": "",
+    },
+    "slave": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "phodal",
+        "USER": "root",
+        "PASSWORD": "",
+        "HOST": "",
+        "PORT": "",
+    },
+}
+B.然后，在MYSQL建立空的数据库，将表结果从主库弄到从库：
+
+CREATE DATABASE phodal CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+python ./manage.py syncdb --database slave
+
+C.确保每个APP的SQL过程语句生成，没有的话，运行以下语句：
+
+python manage.py makemigrations FAT
+
+D.将SQLITE主库的数据导出：
+
+python manage.py dumpdata > mysite_all_data.json
+
+E.切换主库和从库的setting.py设置，将MYSQL设置为主库，导入数据。
+
+python manage.py loaddata mysite_all_data.json
+
+　　如果静态文件CSS.JS指向错误，则运行：
+
+ 　　python manage.py collectstatic
+
+　　然后将静态文修的放到合适的位置。
+
+
+常见错误：
+
+往往不那么顺利，原因如下：
+
+a) 我们在写models的时候如果用到CharField,就一定要写max_length,在sqlite3中是不检查这个最大长度的，你写最大允许长度为100，你往数据库放10000个，sqlite3都不报错，而且不截断数据的长度，这似乎是slite3的优点，但是也给从sqlite3导入其它数据库带来了困难,因为MySQL和PostgreSQL数据库都会检查最大长度，超出时就报错！
+
+
+
+b) Django 自带的contentType会导致出现一些问题
+
+用上面的方法只迁移一个app应该问题不大，但是如果有用户，用户组挂钩，事情往往变得糟糕！如果导入后没有对数据进行修改，你可以考虑重新导入，可能还要快一些，如果是手动在后台输入或者修改过，这种方法就不适用了

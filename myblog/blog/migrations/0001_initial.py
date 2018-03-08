@@ -32,6 +32,7 @@ class Migration(migrations.Migration):
                 ('user_register_time', models.DateTimeField(auto_now_add=True, verbose_name=b'date to register')),
                 ('mysignature', models.TextField(null=True)),
                 ('last_seen', models.DateTimeField(auto_now_add=True)),
+                ('avatar', models.CharField(default=b'avatar-default.jpg', max_length=200)),
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
                 ('user_permissions', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Permission', blank=True, help_text='Specific permissions for this user.', verbose_name='user permissions')),
             ],
@@ -42,6 +43,34 @@ class Migration(migrations.Migration):
             },
             managers=[
                 (b'objects', django.contrib.auth.models.UserManager()),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Comment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('content', models.CharField(default=b'', max_length=100)),
+                ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name=b'time_to_comment')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Friendship',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('followed', models.ForeignKey(related_name='followed', to=settings.AUTH_USER_MODEL)),
+                ('follower', models.ForeignKey(related_name='follower', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='Message',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('has_readed', models.BooleanField(default=False)),
+                ('content', models.CharField(max_length=100, null=True)),
+                ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name=b'time_to_send')),
+                ('post_id', models.IntegerField(null=True)),
+                ('receiver', models.ManyToManyField(related_name='receiver', to=settings.AUTH_USER_MODEL)),
+                ('sender', models.ForeignKey(related_name='sender', to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
@@ -61,13 +90,37 @@ class Migration(migrations.Migration):
                 ('brief', models.CharField(default=b'', max_length=100)),
                 ('type', models.CharField(max_length=100)),
                 ('post_image', models.CharField(max_length=200, null=True)),
-                ('post_time', models.DateTimeField(auto_now=True, verbose_name=b'time_to_post')),
-                ('author', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('post_time', models.DateTimeField(auto_now_add=True, verbose_name=b'time_to_post')),
+                ('heart_num', models.PositiveIntegerField(default=0)),
+                ('img_num', models.PositiveIntegerField(default=0)),
+                ('comment_num', models.PositiveIntegerField(default=0)),
+                ('collection_num', models.PositiveIntegerField(default=0)),
+                ('author', models.ForeignKey(related_name='author', to=settings.AUTH_USER_MODEL)),
+                ('collection', models.ManyToManyField(related_name='collector', to=settings.AUTH_USER_MODEL)),
+                ('heart', models.ManyToManyField(related_name='heart_man', to=settings.AUTH_USER_MODEL)),
+            ],
+        ),
+        migrations.CreateModel(
+            name='UserMessagesCount',
+            fields=[
+                ('user_id', models.IntegerField(serialize=False, primary_key=True)),
+                ('unread_count', models.IntegerField(default=0)),
+                ('total_count', models.IntegerField(default=0)),
             ],
         ),
         migrations.AddField(
             model_name='picture',
             name='article',
             field=models.ForeignKey(to='blog.Post'),
+        ),
+        migrations.AddField(
+            model_name='comment',
+            name='article',
+            field=models.ForeignKey(to='blog.Post'),
+        ),
+        migrations.AddField(
+            model_name='comment',
+            name='commentor',
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL),
         ),
     ]

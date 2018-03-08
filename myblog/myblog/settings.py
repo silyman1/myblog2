@@ -87,13 +87,31 @@ WSGI_APPLICATION = 'myblog.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'slave': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "pzcuse",
+        "USER": "root",
+        "PASSWORD": "pzc",
+        "HOST": "",
+        "PORT": "",
+    },
+}
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': 'django2',    #你的数据库名称
+        'USER': 'root',   #你的数据库用户名
+        'PASSWORD': 'pzc', #你的数据库密码
+        'HOST': '', #你的数据库主机，留空默认为localhost
+        'PORT': '3306', #你的数据库端口
     }
 }
-
-
+'''
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
