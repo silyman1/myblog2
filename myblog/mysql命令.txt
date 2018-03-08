@@ -1,0 +1,4 @@
+ create database phodal character set utf8 collate utf8-general_ci;
+mysql -u root -p
+ use django2
+ show create database django2;
